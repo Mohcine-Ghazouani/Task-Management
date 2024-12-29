@@ -8,9 +8,8 @@ import {
     FaUserPlus,
     FaTimes,
 } from "react-icons/fa";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import "./Navbar.css";
-
 
 export default function Navbar() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -55,7 +54,6 @@ export default function Navbar() {
         text: PropTypes.string.isRequired,
     };
 
-    
     return (
         <>
             <nav className="navbar">
@@ -115,7 +113,3 @@ export default function Navbar() {
         </>
     );
 }
-
-
-
-

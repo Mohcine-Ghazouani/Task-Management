@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Users from "../pages/Users";
 import Layout from "../layouts/Layout";
+import NotFound from "../pages/NotFound";
 
 export const router = createBrowserRouter([
     {
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
             {
                 path: "/users",
                 element: <Users />,
+            },
+            {
+                path: "*",
+                element: <NotFound />,
             },
         ],
     },
