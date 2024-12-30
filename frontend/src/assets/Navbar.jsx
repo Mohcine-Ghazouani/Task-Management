@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import {
     FaBars,
     FaBell,
@@ -8,7 +10,7 @@ import {
     FaUserPlus,
     FaTimes,
 } from "react-icons/fa";
-import PropTypes from "prop-types";
+
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -42,17 +44,6 @@ export default function Navbar() {
         document.addEventListener("click", handleClickOutside);
         return () => document.removeEventListener("click", handleClickOutside);
     }, [isMobile, sidebarOpen]);
-
-    const SideBarIcon = ({ icon, text }) => (
-        <div className="sidebar-icon">
-            {icon}
-            <span className="sidebar-icon-text">{text}</span>
-        </div>
-    );
-    SideBarIcon.propTypes = {
-        icon: PropTypes.element.isRequired,
-        text: PropTypes.string.isRequired,
-    };
 
     return (
         <>
@@ -98,10 +89,26 @@ export default function Navbar() {
                     </button>
                 </div>
                 <div className="sidebar-content">
-                    <SideBarIcon icon={<FaHome />} text="Home" />
-                    <SideBarIcon icon={<FaUser />} text="Users" />
-                    <SideBarIcon icon={<FaSignInAlt />} text="Login" />
-                    <SideBarIcon icon={<FaUserPlus />} text="Register" />
+                    <Link to="/" className="link-icon">
+                        <FaHome />
+                        <span className="link-text">Home</span>
+                        {/* <SideBarIcon icon={<FaHome />} text="Home" /> */}
+                    </Link>
+                    <Link to="/Users" className="link-icon">
+                        <FaUser />
+                        <span className="link-text">Users</span>
+                        {/* <SideBarIcon icon={<FaUser />} text="Users" /> */}
+                    </Link>
+                    <Link to="/Login" className="link-icon">
+                        <FaSignInAlt />
+                        <span className="link-text">Login</span>
+                        {/* <SideBarIcon icon={<FaSignInAlt />} text="Login" /> */}
+                    </Link>
+                    <Link to="/Register" className="link-icon">
+                        <FaUserPlus />
+                        <span className="link-text">Register</span>
+                        {/* <SideBarIcon icon={<FaUserPlus />} text="Register" /> */}
+                    </Link>
                 </div>
             </div>
             {isMobile && sidebarOpen && (
