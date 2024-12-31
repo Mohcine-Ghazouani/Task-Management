@@ -12,6 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { axiosClient } from "../../api/axios";
 
 const formSchema = z.object({
   email: z.string().email().min(2).max(50),
@@ -22,14 +23,15 @@ export default function UserLogin() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "example@email.com",
+      password: "12345678",
     },
   });
 
-  function onSubmit(values) {
-    console.log(values);
-  }
+  const onSubmit = async (values) => {
+    const data = await axiosClient.post("/login", { values });
+    console.log(data);
+  };
   return (
     <>
       <Form {...form}>
