@@ -23,6 +23,10 @@ export const router = createBrowserRouter([
                 element: <Register />,
             },
             {
+                path: "/dashboard",
+                element: <div className="container m-20 mx-auto w-1/2"><h1 className="text-2xl font-bold">Dashboard</h1></div>,
+            },
+            {
                 path: "/users",
                 element: <Users />,
             },

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,6 +13,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { axiosClient } from "../../api/axios";
+import { useNavigate } from "react-router-dom";
+
+
 
 const formSchema = z.object({
   email: z.string().email().min(2).max(50),
@@ -20,16 +23,38 @@ const formSchema = z.object({
 });
 
 export default function UserLogin() {
+  const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "example@email.com",
-      password: "12345678",
+      email: "test@gmail.com",
+      password: "123456789",
     },
   });
+  const {setError ,formState: { isSubmitting }} = form;
 
   const onSubmit = async (values) => {
-    const data = await axiosClient.post("/login", { values });
+    await axiosClient.get("/sanctum/csrf-cookie");
+    const data = axiosClient
+      .post("/login", values)
+      .then((values) => {
+        if (values.status === 204) {
+          navigate("/dashboard");
+        }
+      })
+      .catch(({response}) => {
+       
+         
+          setError("email", {
+            message: response.data.errors.email.join(),
+          });
+          // for (const error in response.data.errors) {
+          //   console.log(error);
+          // }
+          
+       
+      });
+     
     console.log(data);
   };
   return (
@@ -62,7 +87,9 @@ export default function UserLogin() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button disabled={isSubmitting} type="submit">
+          Login {isSubmitting && <Loader2 className="mx-2 my-2 animate-spin"/>}
+          </Button>
         </form>
       </Form>
     </>

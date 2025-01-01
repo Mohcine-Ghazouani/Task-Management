@@ -109,6 +109,11 @@ export default function Navbar() {
                         <span className="link-text">Register</span>
                         {/* <SideBarIcon icon={<FaUserPlus />} text="Register" /> */}
                     </Link>
+                    <Link to="/dashboard" className="link-icon">
+                        <FaUserPlus />
+                        <span className="link-text">Dashboard</span>
+                        
+                    </Link>
                 </div>
             </div>
             {isMobile && sidebarOpen && (
