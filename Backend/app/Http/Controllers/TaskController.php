@@ -93,6 +93,36 @@ class TaskController extends Controller
             ], 404);
         }
     }
+
+
+
+    public function index()
+    {
+        $tasks = DB::table('tasks')->get();
+
+        return response()->json([
+            'success' => true,
+            'tasks' => $tasks,
+        ]);
+    }
+
+   
+    public function show($id)
+    {
+        $task = DB::table('tasks')->where('id', $id)->first();
+
+        if ($task) {
+            return response()->json([
+                'success' => true,
+                'task' => $task,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Task not found.',
+            ], 404);
+        }
+    }
 }
 
 

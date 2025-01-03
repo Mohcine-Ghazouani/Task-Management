@@ -88,4 +88,32 @@ class UserController extends Controller
             ], 404);
         }
     }
+
+    public function index()
+    {
+        $users = DB::table('users')->get();
+
+        return response()->json([
+            'success' => true,
+            'users' => $users,
+        ]);
+    }
+
+   
+    public function show($id)
+    {
+        $user = DB::table('users')->where('id', $id)->first();
+
+        if ($user) {
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found.',
+            ], 404);
+        }
+    }
 }
