@@ -35,11 +35,12 @@ class CommentController extends Controller
     {
         $request->validate([
             'content' => 'required|max:500',
-            // 'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,id',
             'task_id' => 'required|exists:tasks,id',
         ]);
         $comment = DB::table('comments')->insertGetId([
             'content' => $request->content,
+            'user_id' => $request->user_id,
             'task_id' => $request->task_id,
             'created_at' => now(),
         ]);

@@ -32,6 +32,15 @@ class TaskController extends Controller
             'updated_at' => now(),
         ]);
 
+        if ($request->user_id) {
+            DB::table('notifications')->insert([
+                'message' => 'A new task has been assigned to you: ' . $request->title,
+                'user_id' => $request->user_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
         
         return response()->json([
             'success' => true,
@@ -62,6 +71,14 @@ class TaskController extends Controller
                 'user_id' => $request->user_id,
                 'updated_at' => now(),
             ]));
+
+        // if ($updated) {
+        //     DB::table('notifications')->where('user_id',$id)->update([
+        //         'message' => 'The new task has been updated: ' . $request->title,
+        //         'user_id' => $request->user_id,
+        //         'updated_at' => now(),
+        //     ]);
+        // }
 
         if ($updated) {
             return response()->json([
