@@ -27,8 +27,8 @@ export default function UserLogin() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "test@gmail.com",
-      password: "123456789",
+      email: "",
+      password: "",
     },
   });
   const {setError ,formState: { isSubmitting }} = form;
@@ -39,6 +39,7 @@ export default function UserLogin() {
       .post("/login", values)
       .then((values) => {
         if (values.status === 204) {
+          window.localStorage.setItem('ACCESS_TOKEN','test');
           navigate("/dashboard");
         }
       })
