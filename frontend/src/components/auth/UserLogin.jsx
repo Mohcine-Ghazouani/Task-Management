@@ -34,7 +34,9 @@ export default function UserLogin() {
   const {setError ,formState: { isSubmitting }} = form;
 
   const onSubmit = async (values) => {
-    await axiosClient.get("/sanctum/csrf-cookie");
+    await axiosClient.get("/sanctum/csrf-cookie",{
+      baseURL: import.meta.env.VITE_BACKEND_URL
+    });
     const data = axiosClient
       .post("/login", values)
       .then((values) => {
