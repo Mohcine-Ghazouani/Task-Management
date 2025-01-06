@@ -1,4 +1,4 @@
-:root {
+/* :root {
     --main-color: #719192;
     --second-color: #dfcdc3;
     --black: #13131a;
@@ -31,7 +31,7 @@ body {
     margin: 0;
     padding: 0 20px;
     display: flex;
-    /* justify-content: space-between; */
+   
     align-items: center;
     height: 64px;
 }
@@ -39,7 +39,7 @@ body {
 .navbar-content {
     display: flex;
     justify-content: space-between;
-    /* align-items: center; */
+
     width: 100%;
 }
 
@@ -271,4 +271,4 @@ body {
     inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 30;
-}
+} */

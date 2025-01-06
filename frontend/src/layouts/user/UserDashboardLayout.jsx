@@ -1,4 +1,4 @@
-import { data, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import {LOGIN_ROUTE} from "../../router/index";
 import { useEffect } from "react";
