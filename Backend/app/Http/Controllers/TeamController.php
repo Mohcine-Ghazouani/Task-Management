@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TeamService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class TeamController extends Controller
 {
+    protected $teamService;
+
+    public function __construct(TeamService $teamService)
+    {
+        $this->teamService = $teamService;
+    }
+
     public function index()
     {
-        $teams = DB::table('teams')->get();
+        $teams = $this->teamService->getAllTeams();
         return response()->json([
             'success' => true,
             'teams' => $teams,
@@ -18,21 +25,19 @@ class TeamController extends Controller
 
     public function show($id)
     {
-        $team = DB::table('teams')->where('id',$id)->first();
-        if ($team){
+        $team = $this->teamService->getTeamById($id);
+        if ($team) {
             return response()->json([
                 'success' => true,
                 'team' => $team,
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Team not found.',
-            ],404);
+            ], 404);
         }
-        
     }
-
 
     public function store(Request $request)
     {
@@ -40,31 +45,22 @@ class TeamController extends Controller
             'name' => 'required|max:255',
         ]);
 
-        $team = DB::table('teams')->insertGetId([
-            'name' => $request->name,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $team = $this->teamService->createTeam(['name' => $request->name]);
 
         return response()->json([
             'success' => true,
             'message' => 'Team created successfully!',
-            'team_id' => $team,
+            'team_id' => $team->id,
         ], 201);
     }
 
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|max:255',
         ]);
 
-        $updated = DB::table('teams')
-            ->where('id',$id)
-            ->update(array_filter([
-                'name' => $request->name,
-                'updated_at' => now(),
-            ]));
+        $updated = $this->teamService->updateTeam($id, ['name' => $request->name]);
 
         if ($updated) {
             return response()->json([
@@ -78,21 +74,21 @@ class TeamController extends Controller
             ], 404);
         }
     }
+
     public function destroy($id)
     {
-        $deleted = DB::table('teams')->where('id',$id)->delete();
+        $deleted = $this->teamService->deleteTeam($id);
 
-        if ($deleted){
+        if ($deleted) {
             return response()->json([
                 'success' => true,
-                'message' => 'team deleted'
+                'message' => 'Team deleted successfully!',
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
-                'message' => 'team not found.'
-            ]);
+                'message' => 'Team not found.',
+            ], 404);
         }
     }
-    
 }

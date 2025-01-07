@@ -3,12 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
-  
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
+    public function index()
+    {
+        $users = $this->userService->getAllUsers();
+
+        return response()->json([
+            'success' => true,
+            'users' => $users,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $user = $this->userService->getUserById($id);
+
+        if ($user) {
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found.',
+            ], 404);
+        }
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -19,24 +51,15 @@ class UserController extends Controller
             'team_id' => 'nullable|exists:teams,id',
         ]);
 
-        $user = DB::table('users')->insertGetId([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'team_id' => $request->team_id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $user = $this->userService->createUser($request->all());
 
         return response()->json([
             'success' => true,
             'message' => 'User created successfully!',
-            'user_id' => $user,
+            'user' => $user,
         ], 201);
     }
 
- 
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -47,39 +70,13 @@ class UserController extends Controller
             'team_id' => 'nullable|exists:teams,id',
         ]);
 
-        $data = array_filter([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : null,
-            'role' => $request->role,
-            'team_id' => $request->team_id,
-            'updated_at' => now(),
-        ]);
+        $user = $this->userService->updateUser($id, $request->all());
 
-        $updated = DB::table('users')->where('id', $id)->update($data);
-
-        if ($updated) {
+        if ($user) {
             return response()->json([
                 'success' => true,
                 'message' => 'User updated successfully!',
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found or no changes made.',
-            ], 404);
-        }
-    }
-
-    
-    public function destroy($id)
-    {
-        $deleted = DB::table('users')->where('id', $id)->delete();
-
-        if ($deleted) {
-            return response()->json([
-                'success' => true,
-                'message' => 'User deleted successfully!',
+                'user' => $user,
             ]);
         } else {
             return response()->json([
@@ -89,25 +86,14 @@ class UserController extends Controller
         }
     }
 
-    public function index()
+    public function destroy($id)
     {
-        $users = DB::table('users')->get();
+        $deleted = $this->userService->deleteUser($id);
 
-        return response()->json([
-            'success' => true,
-            'users' => $users,
-        ]);
-    }
-
-   
-    public function show($id)
-    {
-        $user = DB::table('users')->where('id', $id)->first();
-
-        if ($user) {
+        if ($deleted) {
             return response()->json([
                 'success' => true,
-                'user' => $user,
+                'message' => 'User deleted successfully!',
             ]);
         } else {
             return response()->json([

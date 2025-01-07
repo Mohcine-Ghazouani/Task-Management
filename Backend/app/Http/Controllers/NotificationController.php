@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function index()
     {
-        $notifications = DB::table('notifications')->get();
+        $notifications = $this->notificationService->getAllNotifications();
 
         return response()->json([
             'success' => true,
@@ -17,10 +24,9 @@ class NotificationController extends Controller
         ]);
     }
 
-
     public function show($id)
     {
-        $notification = DB::table('notifications')->where('id', $id)->first();
+        $notification = $this->notificationService->getNotificationById($id);
 
         if ($notification) {
             return response()->json([
@@ -35,72 +41,58 @@ class NotificationController extends Controller
         }
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'message' => 'required|max:500',
-            'user_id' => 'required|exists:users,id',
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'message' => 'required|max:500',
+    //         'user_id' => 'required|exists:users,id',
+    //     ]);
 
-        $notification = DB::table('notifications')->insertGetId([
-            'message' => $request->message,
-            'user_id' => $request->user_id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+    //     $notification = $this->notificationService->createNotification($request->all());
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Notification created successfully!',
-            'notification_id' => $notification,
-        ], 201);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Notification created successfully!',
+    //         'notification' => $notification,
+    //     ], 201);
+    // }
 
-    
     public function update(Request $request, $id)
     {
         $request->validate([
             'is_read' => 'boolean',
         ]);
 
-        $updated = DB::table('notifications')
-            ->where('id', $id)
-            ->update([
-                'is_read' => $request->is_read,
-                'updated_at' => now(),
-            ]);
+        $notification = $this->notificationService->updateNotification($id, $request->all());
 
-        if ($updated) {
+        if ($notification) {
             return response()->json([
                 'success' => true,
                 'message' => 'Notification updated successfully!',
+                'notification' => $notification,
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Notification not found or no changes made.',
+                'message' => 'Notification not found.',
             ], 404);
         }
     }
 
-
     public function destroy($id)
     {
-        $deleted = DB::table('notifications')->where('id',$id)->delete();
+        $deleted = $this->notificationService->deleteNotification($id);
 
-        if ($deleted){
+        if ($deleted) {
             return response()->json([
                 'success' => true,
-                'message' => 'notification deleted'
+                'message' => 'Notification deleted successfully.',
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
-                'message' => 'notification not found.'
-            ]);
+                'message' => 'Notification not found.',
+            ], 404);
         }
     }
-
-
-    
 }

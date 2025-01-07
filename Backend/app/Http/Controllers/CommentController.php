@@ -2,35 +2,45 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Services\CommentService;
 
 class CommentController extends Controller
 {
+    protected $commentService;
+
+    public function __construct(CommentService $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
     public function index()
     {
-        $comments = DB::table('comments')->get();
+        $comments = $this->commentService->getAllComments();
+
         return response()->json([
             'success' => true,
             'comments' => $comments,
         ]);
     }
+
     public function show($id)
     {
-        $comment = DB::table('comments')->where('id',$id)->first();
-        if($comment){
+        $comment = $this->commentService->getCommentById($id);
+
+        if ($comment) {
             return response()->json([
                 'success' => true,
-                'comments' => $comment,
+                'comment' => $comment,
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
-                'comments' => 'Comment not found',
-            ]);
+                'message' => 'Comment not found.',
+            ], 404);
         }
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -38,58 +48,52 @@ class CommentController extends Controller
             'user_id' => 'required|exists:users,id',
             'task_id' => 'required|exists:tasks,id',
         ]);
-        $comment = DB::table('comments')->insertGetId([
-            'content' => $request->content,
-            'user_id' => $request->user_id,
-            'task_id' => $request->task_id,
-            'created_at' => now(),
-        ]);
+
+        $comment = $this->commentService->createComment($request->all());
+
         return response()->json([
             'success' => true,
             'message' => 'Comment added successfully!',
-            'comment_id' => $comment,
+            'comment' => $comment,
         ], 201);
     }
 
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'content' => 'required|max:500',
         ]);
-        $updated = DB::table('comments')
-            ->where('id',$id)
-            ->update(array_filter([
-                'content' => $request->content,
-                'updated_at' => now(),
-            ]));
-        if ($updated) {
+
+        $comment = $this->commentService->updateComment($id, $request->all());
+
+        if ($comment) {
             return response()->json([
                 'success' => true,
-                'message' => 'comment updated successfully!',
+                'message' => 'Comment updated successfully!',
+                'comment' => $comment,
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'comment not found or no changes made.',
+                'message' => 'Comment not found.',
             ], 404);
         }
     }
 
     public function destroy($id)
     {
-        $deleted = DB::table('comments')->where('id',$id)->delete();
+        $deleted = $this->commentService->deleteComment($id);
 
-        if ($deleted){
+        if ($deleted) {
             return response()->json([
                 'success' => true,
-                'message' => 'comment deleted'
+                'message' => 'Comment deleted successfully.',
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
-                'message' => 'comment not found.'
-            ]);
+                'message' => 'Comment not found.',
+            ], 404);
         }
     }
-
 }

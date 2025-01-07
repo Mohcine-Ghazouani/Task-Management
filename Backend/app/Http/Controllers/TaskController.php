@@ -3,15 +3,47 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Services\TaskService;
 
 class TaskController extends Controller
 {
+    protected $taskService;
+
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+    }
+
+    public function index()
+    {
+        $tasks = $this->taskService->getAllTasks();
+
+        return response()->json([
+            'success' => true,
+            'tasks' => $tasks,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $task = $this->taskService->getTaskById($id);
+
+        if ($task) {
+            return response()->json([
+                'success' => true,
+                'task' => $task,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Task not found.',
+            ], 404);
+        }
+    }
+
     public function store(Request $request)
     {
-       
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'required|max:1000',
@@ -21,31 +53,12 @@ class TaskController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $task = DB::table('tasks')->insertGetId([
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status,
-            'priority' => $request->priority,
-            'due_date' => $request->due_date,
-            'user_id' => $request->user_id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $task = $this->taskService->createTask($request->all());
 
-        if ($request->user_id) {
-            DB::table('notifications')->insert([
-                'message' => 'A new task has been assigned to you: ' . $request->title,
-                'user_id' => $request->user_id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        
         return response()->json([
             'success' => true,
             'message' => 'Task created successfully!',
-            'task_id' => $task,
+            'task' => $task,
         ], 201);
     }
 
@@ -60,43 +73,25 @@ class TaskController extends Controller
             'user_id' => 'nullable|exists:users,id',
         ]);
 
-        $updated = DB::table('tasks')
-            ->where('id', $id)
-            ->update(array_filter([
-                'title' => $request->title,
-                'description' => $request->description,
-                'status' => $request->status,
-                'priority' => $request->priority,
-                'due_date' => $request->due_date,
-                'user_id' => $request->user_id,
-                'updated_at' => now(),
-            ]));
+        $task = $this->taskService->updateTask($id, $request->all());
 
-        // if ($updated) {
-        //     DB::table('notifications')->where('user_id',$id)->update([
-        //         'message' => 'The new task has been updated: ' . $request->title,
-        //         'user_id' => $request->user_id,
-        //         'updated_at' => now(),
-        //     ]);
-        // }
-
-        if ($updated) {
+        if ($task) {
             return response()->json([
                 'success' => true,
                 'message' => 'Task updated successfully!',
+                'task' => $task,
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Task not found or no changes made.',
+                'message' => 'Task not found.',
             ], 404);
         }
     }
 
-   
     public function destroy($id)
     {
-        $deleted = DB::table('tasks')->where('id', $id)->delete();
+        $deleted = $this->taskService->deleteTask($id);
 
         if ($deleted) {
             return response()->json([
@@ -110,37 +105,8 @@ class TaskController extends Controller
             ], 404);
         }
     }
-
-
-
-    public function index()
-    {
-        $tasks = DB::table('tasks')->get();
-
-        return response()->json([
-            'success' => true,
-            'tasks' => $tasks,
-        ]);
-    }
-
-   
-    public function show($id)
-    {
-        $task = DB::table('tasks')->where('id', $id)->first();
-
-        if ($task) {
-            return response()->json([
-                'success' => true,
-                'task' => $task,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Task not found.',
-            ], 404);
-        }
-    }
 }
+
 
 
 
