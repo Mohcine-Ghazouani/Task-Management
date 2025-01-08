@@ -25,23 +25,22 @@ export default function MemberLogin() {
 
   const onSubmit = async (values) => {
     try {
-      // Ensure CSRF token is retrieved
+     
       await axiosClient.get("/sanctum/csrf-cookie", {
         baseURL: import.meta.env.VITE_BACKEND_URL,
       });
 
-      // Send login request
+ 
       const response = await axiosClient.post("/login", values);
 
       if (response.status === 204) {
-        window.localStorage.setItem("ACCESS_TOKEN", "test");
+        window.localStorage.setItem("ACCESS_TOKEN", "Token");
         navigate("/dashboard");
       }
     } catch (error) {
       if (error.response?.data?.errors) {
         const serverErrors = error.response.data.errors;
 
-        // Map server validation errors to form fields
         Object.keys(serverErrors).forEach((field) => {
           setError(field, { message: serverErrors[field].join(", ") });
         });
@@ -111,7 +110,7 @@ export default function MemberLogin() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Login {isSubmitting && <Loader2 className="mx-2 my-2 animate-spin" />}
+              Login {isSubmitting && <Loader2 className="ml-2 animate-spin" />}
             </button>
           </div>
         </form>

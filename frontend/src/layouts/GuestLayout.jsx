@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 import {DASHBOARD_ROUTE} from "../router/index";
 import { useEffect } from "react";
 
@@ -15,6 +16,7 @@ export default function GuestLayout() {
     <>
       <header>
         <Navbar />
+        <Sidebar />
       </header>
       <main className="main">
         <Outlet />

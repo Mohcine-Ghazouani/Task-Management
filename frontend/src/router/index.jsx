@@ -9,7 +9,7 @@ import GuestLayout from "../layouts/GuestLayout";
 import NotFound from "../pages/NotFound";
 import UserDashbordLayout from "../layouts/user/UserDashboardLayout";
 
-
+export const REGISTER_ROUTE= '/register'            
 export const LOGIN_ROUTE= '/login'
 export const DASHBOARD_ROUTE= '/dashboard'
 
@@ -22,10 +22,7 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
 
-      {
-        path: "/register",
-        element: <Register />,
-      },
+      
 
       {
         path: "/users",
@@ -43,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: LOGIN_ROUTE,
         element: <Login />,
+      },
+      {
+        path: REGISTER_ROUTE,
+        element: <Register />,
       },
     ],
   },

@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+//import { useState, useEffect } from "react";
+//import { Link } from "react-router-dom";
 import {
-  LayoutDashboard,
-  House,
-  LogIn,
-  UserRoundPlus,
-  Users,
+  // LayoutDashboard,
+  // House,
+  // LogIn,
+  // UserRoundPlus,
+  // Users,
   Bell,
-  PanelLeftOpen,
-  PanelLeftClose,
+  //AlignJustify ,
+  //X ,
 } from "lucide-react";
 
 import "./Navbar.css";
@@ -16,36 +16,36 @@ import "./Navbar.css";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
 export default function Navbar() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  // const [sidebarOpen, setSidebarOpen] = useState(false);
+  // const [isMobile, setIsMobile] = useState(false);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  // const toggleSidebar = () => {
+  //   setSidebarOpen(!sidebarOpen);
+  // };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setSidebarOpen(true);
-      } else {
-        setSidebarOpen(false);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setIsMobile(window.innerWidth < 768);
+  //     if (window.innerWidth >= 768) {
+  //       setSidebarOpen(true);
+  //     } else {
+  //       setSidebarOpen(false);
+  //     }
+  //   };
+  //   handleResize();
+  //   window.addEventListener("resize", handleResize);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isMobile && sidebarOpen && !event.target.closest(".sidebar")) {
-        setSidebarOpen(true);
-      }
-    };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [isMobile, sidebarOpen]);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (isMobile && sidebarOpen && !event.target.closest(".sidebar")) {
+  //       setSidebarOpen(true);
+  //     }
+  //   };
+  //   document.addEventListener("click", handleClickOutside);
+  //   return () => document.removeEventListener("click", handleClickOutside);
+  // }, [isMobile, sidebarOpen]);
 
   return (
     <>
@@ -53,13 +53,13 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 flex items-center h-16">
           <div className="flex justify-between w-full">
             <div className="flex items-start">
-              <button
+              {/* <button
                 className="p-2 text-gray-600 hover:text-gray-800 transition duration-200"
                 //className="p-2 border border-gray-400 rounded-md bg-transparent text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
                 onClick={toggleSidebar}
               >
-                <PanelLeftOpen />
-              </button>
+                <AlignJustify  />
+              </button> */}
             </div>
             <div className="flex items-center gap-4">
               <button
@@ -106,7 +106,7 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-      <div
+      {/* <div
         className={`fixed top-0 left-0 h-full w-64 bg-white shadow-md transform transition-transform duration-300 z-40 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -117,7 +117,7 @@ export default function Navbar() {
             className="text-gray-600 hover:text-gray-800 transition duration-200"
             onClick={toggleSidebar}
           >
-            <PanelLeftClose />
+            <X  />
           </button>
         </div>
         <div className="p-4">
@@ -163,7 +163,7 @@ export default function Navbar() {
           className="fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={() => setSidebarOpen(false)}
         />
-      )}
+      )} */}
     </>
   );
 }

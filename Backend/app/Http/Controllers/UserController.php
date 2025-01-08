@@ -16,7 +16,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = $this->userService->getAllUsers();
+        $users = $this->userService->getAllUsersWithTeams();
 
         return response()->json([
             'success' => true,

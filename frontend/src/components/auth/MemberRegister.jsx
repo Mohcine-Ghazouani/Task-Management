@@ -25,19 +25,19 @@ export default function Register() {
 
   const onSubmit = async (values) => {
     try {
-      // Ensure CSRF token is retrieved
+    
       await axiosClient.get("/sanctum/csrf-cookie", {
         baseURL: import.meta.env.VITE_BACKEND_URL,
       });
 
-      // Send registration request
+    
       await axiosClient.post("/register", values);
       navigate("/dashboard");
     } catch (error) {
       if (error.response?.data?.errors) {
         const serverErrors = error.response.data.errors;
 
-        // Map backend validation errors to form fields
+  
         Object.keys(serverErrors).forEach((field) => {
           setError(field, { message: serverErrors[field][0] });
         });
