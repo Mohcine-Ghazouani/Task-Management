@@ -2,18 +2,18 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
-import "./Layout.css";
 export default function Layout() {
-    return (
-        <>
-            <header>
-                <Navbar />
-                <Sidebar />
-            </header>
-            <main className="main">
-                <Outlet />
-            </main>
-            {/* <footer>footer</footer> */}
-        </>
-    );
+  return (
+    <>
+      <header className="h-16">
+        <Navbar />
+
+        <Sidebar />
+      </header>
+      <main className="main mx-16">
+        <Outlet />
+      </main>
+      {/* <footer>footer</footer> */}
+    </>
+  );
 }

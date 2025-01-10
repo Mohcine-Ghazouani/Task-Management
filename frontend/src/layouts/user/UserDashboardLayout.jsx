@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { LOGIN_ROUTE } from "../../router/index";
@@ -7,27 +7,64 @@ import { axiosClient } from "../../api/axios";
 
 export default function UserDashbordLayout() {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-
+  //const [users, setUsers] = useState([]);
+  const [user, setUser] = useState([]);
 
   useEffect(() => {
     if (!window.localStorage.getItem("ACCESS_TOKEN")) {
       navigate(LOGIN_ROUTE);
     }
-    axiosClient.get("/users").then(({ data }) => {
-      setUsers(data.users);
+    // axiosClient.get("/users").then(({ data }) => {
+    //   setUsers(data.users);
+    // });
+    axiosClient.get("/user").then(({ data }) => {
+      setUser(data);
     });
   }, []);
-  console.log(users);
+  // console.log(users);
+  console.log(user);
   return (
     <>
-      <header>
+      <header className="h-16">
         <Navbar />
         <Sidebar />
       </header>
-      <main className="main">
-        {/* <Outlet /> */}
-        <div className="p-6 container mt-20  ">
+      <main className="main mx-16">
+         <div className="container border p-2 mt-4 rounded-lg bg-white shadow">
+          <table className="table-auto w-full">
+            <tbody>
+              <tr className="border-b">
+                <th className="text-left p-3 font-medium text-gray-700">
+                  Role:
+                </th>
+                <td className="p-3 text-gray-600">{user.role}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="text-left p-3 font-medium text-gray-700">
+                  Name:
+                </th>
+                <td className="p-3 text-gray-600">{user.name}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="text-left p-3 font-medium text-gray-700">
+                  Email:
+                </th>
+                <td className="p-3 text-gray-600">{user.email}</td>
+              </tr>
+              <tr>
+                <th className="text-left p-3 font-medium text-gray-700">
+                  Team:
+                </th>
+                <td className="p-3 text-gray-600">
+                  {user.team ? user.team.name : <p className="text-red-500">No Team</p>}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* <Outlet/> */}
+        {/* <div className="p-6 container mt-20  ">
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-200 rounded-lg">
               <thead className="bg-gray-100">
@@ -67,10 +104,7 @@ export default function UserDashbordLayout() {
                       {user.role}
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-800">
-                      
-                      {user.team_id ? user.team.name : <p className="text-red-500">No Team</p>}
-                      
-                      
+                      {user.team ? user.team.name : <p className="text-red-500">No Team</p>}
                     </td>
                     <td className="px-4 py-2 text-center">
                       <button className="px-2 py-1 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">
@@ -85,7 +119,7 @@ export default function UserDashbordLayout() {
               </tbody>
             </table>
           </div>
-        </div>
+        </div>  */}
       </main>
       {/* <footer>footer</footer> */}
     </>

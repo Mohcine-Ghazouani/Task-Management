@@ -12,12 +12,12 @@ import {
 export default function Sidebar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
+  
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       if (window.innerWidth >= 768) {
-        setSidebarOpen(false); // Default collapsed on larger screens
+        setSidebarOpen(false); 
       }
     };
     handleResize();
@@ -40,10 +40,10 @@ export default function Sidebar() {
         className={`fixed top-0 left-0 h-full bg-white shadow-md z-40 transition-all duration-300 ease-in-out ${
           isMobile
             ? sidebarOpen
-              ? "translate-x-0 w-64"
+              ? "translate-x-0 w-60"
               : "-translate-x-full"
             : sidebarOpen
-            ? "w-60"
+            ? "w-48"
             : "w-16"
         }`}
       >
@@ -99,8 +99,6 @@ export default function Sidebar() {
     </>
   );
 }
-
-
 
 
 
