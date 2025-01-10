@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { axiosClient } from "../../api/axios";
 
 export default function UserDashbordLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = window.innerWidth < 768;
+
   const navigate = useNavigate();
   //const [users, setUsers] = useState([]);
   const [user, setUser] = useState([]);
@@ -27,10 +30,16 @@ export default function UserDashbordLayout() {
     <>
       <header className="h-16">
         <Navbar />
-        <Sidebar />
       </header>
-      <main className="main mx-16">
-         <div className="container border p-2 mt-4 rounded-lg bg-white shadow">
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <main
+        className={`main flex-grow transition-all duration-300 ease-in-out ${
+          sidebarOpen && !isMobile ? "mx-52" : "mx-4" 
+        }
+        ${!sidebarOpen && !isMobile ? "mx-20" : ""}`
+      }
+      >
+        <div className="container border p-2  mt-4 rounded-lg bg-white shadow">
           <table className="table-auto w-full">
             <tbody>
               <tr className="border-b">
@@ -56,7 +65,11 @@ export default function UserDashbordLayout() {
                   Team:
                 </th>
                 <td className="p-3 text-gray-600">
-                  {user.team ? user.team.name : <p className="text-red-500">No Team</p>}
+                  {user.team ? (
+                    user.team.name
+                  ) : (
+                    <p className="text-red-500">No Team</p>
+                  )}
                 </td>
               </tr>
             </tbody>

@@ -10,7 +10,7 @@ export default function Layout() {
 
         <Sidebar />
       </header>
-      <main className="main mx-16">
+      <main className="main mx-52">
         <Outlet />
       </main>
       {/* <footer>footer</footer> */}
