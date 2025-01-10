@@ -9,16 +9,10 @@ class UserService
     /**
      * Fetch all users.
      */
-    // public function getAllUsers()
-    // {
-    //     return User::all();
-    // }
+    
     public function getAllUsersWithTeams()
     {
-        // return DB::table('users')
-        //     ->leftJoin('teams', 'users.team_id', '=', 'teams.id')
-        //     ->select('users.*', 'teams.name as team_name')
-        //     ->get();
+       
         return User::with('team')->get();
     }
 

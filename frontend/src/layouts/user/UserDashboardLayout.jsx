@@ -23,9 +23,22 @@ export default function UserDashbordLayout() {
     axiosClient.get("/user").then(({ data }) => {
       setUser(data);
     });
+    
   }, []);
-  // console.log(users);
-  console.log(user);
+  const teamId = user.team_id;
+useEffect(() => {
+  
+  if (teamId) {
+    axiosClient.get(`/teams/${teamId}`).then(({ data }) => {
+      setUser(team => ({...team, team: data.team.name}));
+    });
+  }
+  
+    
+}, [teamId]);
+// console.log(users);
+console.log(user);
+
   return (
     <>
       <header className="h-16">
@@ -33,11 +46,10 @@ export default function UserDashbordLayout() {
       </header>
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <main
-        className={`main flex-grow transition-all duration-300 ease-in-out ${
-          sidebarOpen && !isMobile ? "mx-52" : "mx-4" 
-        }
-        ${!sidebarOpen && !isMobile ? "mx-20" : ""}`
-      }
+        className={`main flex-grow transition-all duration-300 ease-in-out 
+          ${sidebarOpen && !isMobile ? "mx-52" : ""}
+        ${!sidebarOpen && !isMobile ? "mx-20" : ""}
+        ${isMobile ? "mx-4" : ""}`}
       >
         <div className="container border p-2  mt-4 rounded-lg bg-white shadow">
           <table className="table-auto w-full">
@@ -66,7 +78,7 @@ export default function UserDashbordLayout() {
                 </th>
                 <td className="p-3 text-gray-600">
                   {user.team ? (
-                    user.team.name
+                    user.team
                   ) : (
                     <p className="text-red-500">No Team</p>
                   )}
