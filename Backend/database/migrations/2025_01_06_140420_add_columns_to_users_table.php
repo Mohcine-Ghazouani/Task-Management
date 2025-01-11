@@ -9,7 +9,7 @@ class AddColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['Admin', 'Membre'])->after('email');
+            $table->enum('role', ['Member', 'Admin'] )->after('password');
             $table->foreignId('team_id')->nullable()->constrained()->after('role')->onDelete('cascade'); // Add team_id column with foreign key
         });
     }
@@ -17,8 +17,8 @@ class AddColumnsToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['team_id']); // Drop foreign key constraint
-            $table->dropColumn(['role', 'team_id']); // Drop added columns
+            $table->dropForeign(['team_id']); 
+            $table->dropColumn(['role', 'team_id']); 
         });
     }
 }

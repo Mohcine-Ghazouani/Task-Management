@@ -47,7 +47,7 @@ class UserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'role' => 'in:Admin,Membre|default:Membre',
+            'role' => 'in:Admin,Member',
             'team_id' => 'nullable|exists:teams,id',
         ]);
 
@@ -66,7 +66,7 @@ class UserController extends Controller
             'name' => 'nullable|max:255',
             'email' => 'nullable|email|unique:users,email,' . $id,
             'password' => 'nullable|min:6',
-            'role' => 'nullable|in:Admin,Membre',
+            'role' => 'nullable|in:Admin,Member',
             'team_id' => 'nullable|exists:teams,id',
         ]);
 
