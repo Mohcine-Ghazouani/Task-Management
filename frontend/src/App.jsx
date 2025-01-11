@@ -4,17 +4,13 @@ import "./App.css";
 import UserContext from "./context/UserContext.jsx";
 
 function App() {
-    return (
-        <>
-        <UserContext>
-           <RouterProvider router={router} /> 
-        </UserContext>
-            
-        </>
-    );
+  return (
+    <>
+      <UserContext>
+        <RouterProvider router={router} />
+      </UserContext>
+    </>
+  );
 }
 
 export default App;
-
-
-

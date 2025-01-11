@@ -2,9 +2,10 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import  {UseUserContext}  from "../../context/UserContext";
 
-import { axiosClient } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { DASHBOARD_ROUTE } from "../../router/index";
 
 const formSchema = z.object({
   email: z.string().email().nonempty("Email is required"),
@@ -12,7 +13,9 @@ const formSchema = z.object({
 });
 
 export default function MemberLogin() {
-  const navigate = useNavigate();
+  const { navigate } = useNavigate();
+    const { login , setAuthenticated } = UseUserContext();
+  
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -24,30 +27,19 @@ export default function MemberLogin() {
   const { setError, formState: { errors, isSubmitting } } = form;
 
   const onSubmit = async (values) => {
-    try {
-     
-      await axiosClient.get("/sanctum/csrf-cookie", {
-        baseURL: import.meta.env.VITE_BACKEND_URL,
+    login(values.email, values.password).then(
+      (value) => {
+      if (value.status === 204) {
+        setAuthenticated(true);
+        navigate(DASHBOARD_ROUTE);
+      }
+    }).catch(({response}) => {
+      setError('email', {
+      message: response.data.errors.email.join()
       });
+    });
+    
 
- 
-      const response = await axiosClient.post("/login", values);
-
-      if (response.status === 204) {
-        window.localStorage.setItem("ACCESS_TOKEN", "Token");
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      if (error.response?.data?.errors) {
-        const serverErrors = error.response.data.errors;
-
-        Object.keys(serverErrors).forEach((field) => {
-          setError(field, { message: serverErrors[field].join(", ") });
-        });
-      } else {
-        setError("email", { message: "An unexpected error occurred. Please try again." });
-      }
-    }
   };
 
   return (

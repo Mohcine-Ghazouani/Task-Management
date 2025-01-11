@@ -1,20 +1,22 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { LOGIN_ROUTE } from "../../router/index";
 import { useEffect, useState } from "react";
 import { axiosClient } from "../../api/axios";
+import { UseUserContext } from "../../context/UserContext";
 
 export default function UserDashbordLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = window.innerWidth < 768;
 
+  const context = UseUserContext();
   const navigate = useNavigate();
   //const [users, setUsers] = useState([]);
   const [user, setUser] = useState([]);
 
   useEffect(() => {
-    if (!window.localStorage.getItem("ACCESS_TOKEN")) {
+    if (!context.authenticated) {
       navigate(LOGIN_ROUTE);
     }
     // axiosClient.get("/users").then(({ data }) => {
