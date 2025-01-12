@@ -1,14 +1,12 @@
-import UserDashbord from "../components/auth/UserDashboard"
+import { UseUserContext } from "../context/UserContext";
 
-
-export default function Dashboard() {
-    return (
-        <>
-            <div className="container m-20 mx-auto w-1/2">
-                <h1 className="text-2xl font-bold text-center">Dashboard</h1>
-                <UserDashbord />
-            </div>
-            
-        </>
-    );
+export default function Layout() {
+  const { user }= UseUserContext();
+  return (
+    <>
+      <div>
+        <h1 className="text-2xl font-bold text-center">hello {user.name}</h1>
+      </div>
+    </>
+  );
 }

@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Users from "../pages/Users";
 import Dashboard from "../pages/Dashboard";
+import Profile from "../pages/Profile";
 import Layout from "../layouts/Layout";
 import GuestLayout from "../layouts/GuestLayout";
 import NotFound from "../pages/NotFound";
@@ -20,14 +21,7 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-      },
-
-      
-
-      {
-        path: "/users",
-        element: <Users />,
-      },
+      },      
       {
         path: "*",
         element: <NotFound />,
@@ -53,6 +47,14 @@ export const router = createBrowserRouter([
       {
         path: DASHBOARD_ROUTE,
         element: <Dashboard />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/users",
+        element: <Users />,
       },
     ],
   },

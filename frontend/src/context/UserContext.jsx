@@ -24,9 +24,12 @@ export default function UserContext({ children }) {
   //   }
   // };
 
+
   const login = async (email, password) => {
+    
     await UserApi.getCsrfToken();
     return UserApi.login(email, password);
+
   };
   const logout = () => {
     setUser({});

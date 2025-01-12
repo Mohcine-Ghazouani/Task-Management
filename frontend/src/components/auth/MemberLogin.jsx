@@ -30,7 +30,7 @@ export default function MemberLogin() {
   } = form;
 
   const onSubmit = async (values) => {
-    login(values.email, values.password)
+    await login(values.email, values.password)
       .then((value) => {
         if (value.status === 204) {
           setAuthenticated(true);
