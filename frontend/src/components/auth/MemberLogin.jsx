@@ -2,7 +2,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import  {UseUserContext}  from "../../context/UserContext";
+import { UseUserContext } from "../../context/UserContext";
 
 import { useNavigate } from "react-router-dom";
 import { DASHBOARD_ROUTE } from "../../router/index";
@@ -13,9 +13,9 @@ const formSchema = z.object({
 });
 
 export default function MemberLogin() {
-  const { navigate } = useNavigate();
-    const { login , setAuthenticated } = UseUserContext();
-  
+  const navigate = useNavigate();
+  const { login, setAuthenticated } = UseUserContext();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -24,22 +24,24 @@ export default function MemberLogin() {
     },
   });
 
-  const { setError, formState: { errors, isSubmitting } } = form;
+  const {
+    setError,
+    formState: { errors, isSubmitting },
+  } = form;
 
   const onSubmit = async (values) => {
-    login(values.email, values.password).then(
-      (value) => {
-      if (value.status === 204) {
-        setAuthenticated(true);
-        navigate(DASHBOARD_ROUTE);
-      }
-    }).catch(({response}) => {
-      setError('email', {
-      message: response.data.errors.email.join()
+    login(values.email, values.password)
+      .then((value) => {
+        if (value.status === 204) {
+          setAuthenticated(true);
+          navigate(DASHBOARD_ROUTE);
+        }
+      })
+      .catch(({ response }) => {
+        setError("email", {
+          message: response.data.errors.email.join(),
+        });
       });
-    });
-    
-
   };
 
   return (
@@ -53,7 +55,10 @@ export default function MemberLogin() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
+            <label
+              htmlFor="email"
+              className="block text-sm/6 font-medium text-gray-900"
+            >
               Email address
             </label>
             <div className="mt-2">
@@ -66,18 +71,26 @@ export default function MemberLogin() {
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
               )}
             </div>
           </div>
 
           <div>
             <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
+              <label
+                htmlFor="password"
+                className="block text-sm/6 font-medium text-gray-900"
+              >
                 Password
               </label>
               <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                <a
+                  href="#"
+                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -92,7 +105,9 @@ export default function MemberLogin() {
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
               )}
             </div>
           </div>
@@ -109,7 +124,10 @@ export default function MemberLogin() {
 
         <p className="mt-10 text-center text-sm/6 text-gray-500">
           Not a member?{" "}
-          <a href="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
+          <a
+            href="/register"
+            className="font-semibold text-indigo-600 hover:text-indigo-500"
+          >
             Register
           </a>
         </p>

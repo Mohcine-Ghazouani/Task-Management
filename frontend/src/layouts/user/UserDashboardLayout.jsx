@@ -5,41 +5,50 @@ import { LOGIN_ROUTE } from "../../router/index";
 import { useEffect, useState } from "react";
 import { axiosClient } from "../../api/axios";
 import { UseUserContext } from "../../context/UserContext";
+import UserApi from "../../services/Api/User/UserApi";
 
 export default function UserDashbordLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = window.innerWidth < 768;
 
-  const context = UseUserContext();
+  const { user, setUser, setAuthenticated , logout} = UseUserContext();
+
   const navigate = useNavigate();
   //const [users, setUsers] = useState([]);
-  const [user, setUser] = useState([]);
+  //const [user, setUser] = useState([]);
 
   useEffect(() => {
-    if (!context.authenticated) {
-      navigate(LOGIN_ROUTE);
-    }
+    UserApi.getUser()
+      .then(({ data }) => {
+        setUser(data);
+        setAuthenticated(true);
+      })
+      .catch((reason) => {
+        logout();
+        navigate(LOGIN_ROUTE);
+      });
+
+    // console.log(context);
+    // if (!context.authenticated) {
+    //   //navigate(LOGIN_ROUTE);
+    // }
+
     // axiosClient.get("/users").then(({ data }) => {
     //   setUsers(data.users);
     // });
-    axiosClient.get("/user").then(({ data }) => {
-      setUser(data);
-    });
-    
   }, []);
+
+
   const teamId = user.team_id;
-useEffect(() => {
-  
-  if (teamId) {
-    axiosClient.get(`/teams/${teamId}`).then(({ data }) => {
-      setUser(team => ({...team, team: data.team.name}));
-    });
-  }
-  
-    
-}, [teamId]);
-// console.log(users);
-console.log(user);
+  useEffect(() => {
+    if (teamId) {
+      axiosClient.get(`/teams/${teamId}`).then(({ data }) => {
+        setUser((team) => ({ ...team, team: data.team.name }));
+      });
+    }
+  }, [teamId]);
+  // console.log(users);
+  //console.log(user);
 
   return (
     <>
