@@ -104,6 +104,12 @@ export default function Dashboard() {
                   >
                     Edit
                   </button>
+                  <button
+                    //onClick={() => onEdit(task)}
+                    className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+                  >
+                    Add Comment
+                  </button>
                 </td>
               </tr>
             </tbody>

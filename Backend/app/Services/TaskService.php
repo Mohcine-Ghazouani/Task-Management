@@ -16,7 +16,7 @@ class TaskService
 
     public function getAllTasks()
     {
-        return Task::with('user')->all();
+        return Task::with('user')->get();
     }
 
     public function getTaskById($id)
