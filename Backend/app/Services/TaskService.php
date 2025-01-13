@@ -16,12 +16,12 @@ class TaskService
 
     public function getAllTasks()
     {
-        return Task::all();
+        return Task::with('user')->all();
     }
 
-    public function getTask($id)
+    public function getTaskById($id)
     {
-        return Task::find($id);
+        return Task::with('user')->find($id);
     }
 
     public function createTask($data)

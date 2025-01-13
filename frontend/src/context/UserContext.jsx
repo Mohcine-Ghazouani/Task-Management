@@ -3,15 +3,22 @@ import { useContext } from "react";
 import UserApi from "../services/Api/User/UserApi";
 
 const UserStateContext = createContext({
+  task : {},
+  tasks : [],
+  setTask : () => {},
+  setTasks : () => {},
   user: {},
+  setUser: () => {},
+  
   users: [],
   authenticated: false,
   setAuthenticated: () => {},
-  setUser: () => {},
   login: (email, password) => {},
   logout: () => {},
 });
 export default function UserContext({ children }) {
+  const [task, setTask] = useState({});
+  const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
   const [authenticated, _setAuthenticated] = useState(
@@ -36,6 +43,10 @@ export default function UserContext({ children }) {
     <>
       <UserStateContext.Provider
         value={{
+          task,
+          setTask,
+          tasks,
+          setTasks,
           user,
           setUser,
           users,

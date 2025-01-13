@@ -21,6 +21,9 @@ const UserApi = {
   getTasks: async () => {
     return await axiosClient.get('/tasks')
   },
+  getTask: async (id) => {
+    return await axiosClient.get(`/tasks/${id}`)
+  },
 };
 
 export default UserApi
