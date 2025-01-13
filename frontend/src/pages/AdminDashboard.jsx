@@ -29,7 +29,6 @@ export default function AdminDashboard() {
           {tasks.map(
             (task, index) => (
               console.log(task),
-            
               (
                 <div
                   key={index}
@@ -100,7 +99,13 @@ export default function AdminDashboard() {
                         <th className="text-left p-3 font-medium text-gray-700">
                           Assigned To:
                         </th>
-                        <td className="text-gray-600">{task.user_id}</td>
+                        <td className="text-gray-600">
+                          {task.user_id ? (
+                            task.user.name
+                          ) : (
+                            <p className="text-red-500">No assigned user</p>
+                          )}
+                        </td>
                       </tr>
 
                       <tr>
