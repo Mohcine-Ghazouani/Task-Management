@@ -14,6 +14,16 @@ class TaskService
         $this->notificationService = $notificationService;
     }
 
+    public function getAllTasks()
+    {
+        return Task::all();
+    }
+
+    public function getTask($id)
+    {
+        return Task::find($id);
+    }
+
     public function createTask($data)
     {
         $task = Task::create($data);

@@ -18,6 +18,9 @@ const UserApi = {
   getUsers: async () => {
     return await axiosClient.get('/users')
   },  
+  getTasks: async () => {
+    return await axiosClient.get('/tasks')
+  },
 };
 
 export default UserApi
