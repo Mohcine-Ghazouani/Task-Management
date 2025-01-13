@@ -1,19 +1,22 @@
 import { axiosClient } from "../api/axios";
 import { useEffect, useState } from "react";
+import { UseUserContext } from "../context/UserContext";
 
 export default function Users() {
-  const [users, setUsers] = useState([]);
+  const { users , setUsers} = UseUserContext();
+  
   useEffect(() => {
     axiosClient.get("/users").then(({ data }) => {
       setUsers(data.users);
     });
+    
   }, []);
 
   return (
     <>
       <div className="container my-4 space-y-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-800">User List</h2>
+          <h2 className="text-xl font-bold text-gray-800">Users List</h2>
           <button className="px-4 py-2 text-sm font-semibold  text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">
             Add User
           </button>

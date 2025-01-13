@@ -18,10 +18,10 @@ export default function GuestLayout() {
   }, []);
   return (
     <>
-      <header className="h-16">
+      {/* <header className="h-16">
               <Navbar />
-            </header>
-            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+            </header> */}
+            {/* <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
             <main
               className={`main flex-grow transition-all duration-300 ease-in-out 
               ${sidebarOpen && !isMobile ? "mx-52" : ""}

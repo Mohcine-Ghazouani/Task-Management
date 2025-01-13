@@ -12,16 +12,13 @@ import UserDashbordLayout from "../layouts/user/UserDashboardLayout";
 
 export const REGISTER_ROUTE= '/register'            
 export const LOGIN_ROUTE= '/login'
-export const DASHBOARD_ROUTE= '/dashboard'
+export const DASHBOARD_ROUTE= '/'
 
 export const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },      
+           
       {
         path: "*",
         element: <NotFound />,
@@ -44,6 +41,10 @@ export const router = createBrowserRouter([
   {
     element: <UserDashbordLayout />,
     children: [
+      // {
+      //   path: "/",
+      //   element: <Home />,
+      // }, 
       {
         path: DASHBOARD_ROUTE,
         element: <Dashboard />,

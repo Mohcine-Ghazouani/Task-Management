@@ -4,6 +4,7 @@ import UserApi from "../services/Api/User/UserApi";
 
 const UserStateContext = createContext({
   user: {},
+  users: [],
   authenticated: false,
   setAuthenticated: () => {},
   setUser: () => {},
@@ -11,29 +12,19 @@ const UserStateContext = createContext({
   logout: () => {},
 });
 export default function UserContext({ children }) {
+  const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
-  const [authenticated, _setAuthenticated] = useState(localStorage.getItem("AUTHENTICATED") || false);
-  // const login = async (email, password) => {
-  //   try {
-  //     await UserApi.getCsrfToken();
-  //     return await UserApi.login(email, password);
-
-  //   } catch (error) {
-  //     console.error("Login Error:", error);
-  //     throw error;
-  //   }
-  // };
-
+  const [authenticated, _setAuthenticated] = useState(
+    "true" === window.localStorage.getItem("AUTHENTICATED")
+  );
 
   const login = async (email, password) => {
-    
     await UserApi.getCsrfToken();
     return UserApi.login(email, password);
-
   };
   const logout = () => {
     setUser({});
-    _setAuthenticated(false); 
+    setAuthenticated(false);
   };
 
   const setAuthenticated = (isAuthenticated) => {
@@ -47,6 +38,8 @@ export default function UserContext({ children }) {
         value={{
           user,
           setUser,
+          users,
+          setUsers,
           login,
           logout,
           authenticated,

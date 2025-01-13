@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import {
   LayoutDashboard,
   House,
-  LogIn,
-  UserRoundPlus,
   Users,
   AlignJustify,
 } from "lucide-react";
@@ -55,7 +53,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
             <House className="h-6 w-6" />
-            {sidebarOpen && <span className="ml-4">Home</span>}
+            {sidebarOpen && <span className="ml-4">Dashboard</span>}
           </Link>
           <Link
             to="/Users"
@@ -64,7 +62,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
             <Users className="h-6 w-6" />
             {sidebarOpen && <span className="ml-4">Users</span>}
           </Link>
-          <Link
+          {/* <Link
             to="/Login"
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
@@ -77,14 +75,14 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
           >
             <UserRoundPlus className="h-6 w-6" />
             {sidebarOpen && <span className="ml-4">Register</span>}
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             to="/dashboard"
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
             <LayoutDashboard className="h-6 w-6" />
             {sidebarOpen && <span className="ml-4">Dashboard</span>}
-          </Link>
+          </Link> */}
         </div>
       </div>
       {isMobile && sidebarOpen && (

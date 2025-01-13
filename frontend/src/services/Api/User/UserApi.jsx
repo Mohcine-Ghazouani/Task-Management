@@ -15,6 +15,9 @@ const UserApi = {
   getUser: async () => {
     return await axiosClient.get('/user')
   },
+  getUsers: async () => {
+    return await axiosClient.get('/users')
+  },  
 };
 
 export default UserApi

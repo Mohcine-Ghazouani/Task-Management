@@ -6,17 +6,21 @@ import { useEffect, useState } from "react";
 import { axiosClient } from "../../api/axios";
 import { UseUserContext } from "../../context/UserContext";
 import UserApi from "../../services/Api/User/UserApi";
+import { set } from "zod";
 
 export default function UserDashbordLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = window.innerWidth < 768;
 
-  const { user, setUser, setAuthenticated, logout } = UseUserContext();
+  const { user, setUser, authenticated, setAuthenticated, logout } = UseUserContext();
 
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    UserApi.getUser()
+    if (authenticated === true) {
+      setIsLoading(false);
+      UserApi.getUser()
       .then(({ data }) => {
         setUser(data);
         setAuthenticated(true);
@@ -24,10 +28,13 @@ export default function UserDashbordLayout() {
       .catch((reason) => {
         console.log(reason);
         logout();
-        navigate(LOGIN_ROUTE);
-
+        
       });
-  }, []);
+    }else{
+      navigate(LOGIN_ROUTE);
+    }
+    
+  }, [authenticated]);
 
   const teamId = user.team_id;
   useEffect(() => {
@@ -37,6 +44,10 @@ export default function UserDashbordLayout() {
       });
     }
   }, [teamId]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -50,44 +61,7 @@ export default function UserDashbordLayout() {
         ${!sidebarOpen && !isMobile ? "mx-20" : ""}
         ${isMobile ? "mx-4" : ""}`}
       >
-        {/* <div className="container border p-2  mt-4 rounded-lg bg-white shadow">
-          <table className="table-auto w-full">
-            <tbody>
-              <tr className="border-b">
-                <th className="text-left p-3 font-medium text-gray-700">
-                  Role:
-                </th>
-                <td className="p-3 text-gray-600">{user.role}</td>
-              </tr>
-              <tr className="border-b">
-                <th className="text-left p-3 font-medium text-gray-700">
-                  Name:
-                </th>
-                <td className="p-3 text-gray-600">{user.name}</td>
-              </tr>
-              <tr className="border-b">
-                <th className="text-left p-3 font-medium text-gray-700">
-                  Email:
-                </th>
-                <td className="p-3 text-gray-600">{user.email}</td>
-              </tr>
-              <tr>
-                <th className="text-left p-3 font-medium text-gray-700">
-                  Team:
-                </th>
-                <td className="p-3 text-gray-600">
-                  {user.team ? (
-                    user.team
-                  ) : (
-                    <p className="text-red-500">No Team</p>
-                  )}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div> */}
-
-        <Outlet/>
+        <Outlet />
       </main>
       {/* <footer>footer</footer> */}
     </>
