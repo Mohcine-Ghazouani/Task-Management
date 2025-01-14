@@ -20,33 +20,26 @@ class AuthenticatedSessionController extends Controller
         
 
         $user = Auth::guard('web')->user();
-        // $user = null ;
-        // $currentGuard = Auth::guard('web');
-        // if ($currentGuard->check()) {
-        //     $user = $currentGuard->user();
-            
-        // }
+      
         
 
 
         $request->session()->regenerate();
 
-        //return response()->noContent();
+      
 
         return response()->json([
-            // 'user' => $user,
-            // 'role' => $user->role, 
+             
             'user' => [   
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role, // Directly access the role field
+                'role' => $user->role, 
             ],
-        ]);
-        // return response()->json([
-        //     'user' => $user,
             
-        // ]);  
+        ]);
+     
+      
     }
 
     /**

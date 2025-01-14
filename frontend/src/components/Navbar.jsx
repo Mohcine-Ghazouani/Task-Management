@@ -56,7 +56,7 @@ export default function Navbar() {
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">Open user menu</span>
                     <CircleUser className="h-8 w-8 rounded-full" />
-                    {/* <img alt="" src="pic.jpg" className="size-8 rounded-full" /> */}
+                    
                   </MenuButton>
                 </div>
                 <MenuItems

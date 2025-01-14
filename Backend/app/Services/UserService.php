@@ -21,7 +21,7 @@ class UserService
      */
     public function getUserById($id)
     {
-        return User::find($id);
+        return User::with('team')->find($id);
     }
 
     /**

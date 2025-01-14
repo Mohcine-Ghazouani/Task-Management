@@ -47,15 +47,19 @@ export const router = createBrowserRouter([
       {
         path: DASHBOARD_ROUTE,
         element: (
-          // <ProtectedRoute allowedRoles={["Member", "Admin"]}>
-          //   <Dashboard />
-          // </ProtectedRoute>
-          <Dashboard />
+          //<ProtectedRoute allowedRoles={["Member"]}>
+            <Dashboard />
+          //</ProtectedRoute>
+          
         ),
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          //<ProtectedRoute allowedRoles={["Member"]}>
+            <Profile />
+          //</ProtectedRoute>
+        ),
       },
     ],
   },
@@ -65,25 +69,29 @@ export const router = createBrowserRouter([
       {
         path: ADMIN_DASHBOARD_ROUTE,
         element: (
-          // <ProtectedRoute allowedRoles={["Admin"]}>
-          //   <AdminDashboard />
-          // </ProtectedRoute>
-          <AdminDashboard />
+          //<ProtectedRoute allowedRoles={["Admin"]}>
+            <AdminDashboard />
+          //</ProtectedRoute>
+          
         ),
       },
 
       {
         path: "/users",
         element: (
-          // <ProtectedRoute allowedRoles={["Admin"]}>
-          //   <Users />
-          // </ProtectedRoute>
-          <Users />
+          //<ProtectedRoute allowedRoles={["Admin"]}>
+            <Users />
+          //</ProtectedRoute>
+          
         ),
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          //<ProtectedRoute allowedRoles={["Admin"]}>
+            <Profile />
+          //</ProtectedRoute>
+        ),
       },
     ],
   },

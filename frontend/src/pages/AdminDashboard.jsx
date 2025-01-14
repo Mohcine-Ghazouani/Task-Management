@@ -5,11 +5,13 @@ import UserApi from "../services/Api/User/UserApi";
 export default function AdminDashboard() {
   const { user, tasks, setTasks } = UseUserContext();
   useEffect(() => {
-    UserApi.getTasks().then(({ data }) => {
+    if (user.role === "Admin") {
+      UserApi.getTasks().then(({ data }) => {
       setTasks(data.tasks);
     });
-    console.log(tasks);
-  }, []);
+    }
+  }, [ setTasks, user.role ]);
+  console.log(tasks);
   return (
     <>
       <div>
@@ -28,7 +30,7 @@ export default function AdminDashboard() {
           </div>
           {tasks.map(
             (task, index) => (
-              console.log(task),
+              
               (
                 <div
                   key={index}

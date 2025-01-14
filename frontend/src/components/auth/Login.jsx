@@ -6,6 +6,7 @@ import { UseUserContext } from "../../context/UserContext";
 
 import { useNavigate } from "react-router-dom";
 import { ADMIN_DASHBOARD_ROUTE, DASHBOARD_ROUTE } from "../../router/index";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string().email().nonempty("Email is required"),
@@ -14,7 +15,21 @@ const formSchema = z.object({
 
 export default function MemberLogin() {
   const navigate = useNavigate();
-  const { login, setAuthenticated } = UseUserContext();
+  const { login, setAuthenticated, authenticated, user } = UseUserContext();
+
+  useEffect(() => {
+    if (authenticated) {
+      const { role } = user;
+      switch (role) {
+        case "Member":
+          navigate(DASHBOARD_ROUTE);
+          break;
+        case "Admin":
+          navigate(ADMIN_DASHBOARD_ROUTE);
+          break;
+      }
+    }
+  }, [authenticated, user, navigate]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -29,6 +44,7 @@ export default function MemberLogin() {
     await login(values.email, values.password)
       .then(({ status, data }) => {
         if (status === 200) {
+          setAuthenticated(true);
           const { role } = data.user;
           switch (role) {
             case "Member":
@@ -37,12 +53,9 @@ export default function MemberLogin() {
             case "Admin":
               navigate(ADMIN_DASHBOARD_ROUTE);
               break;
-            
           }
           console.log(role);
           console.log(data);
-          setAuthenticated(true);
-          //navigate(DASHBOARD_ROUTE);
         }
       })
       .catch(({ response }) => {

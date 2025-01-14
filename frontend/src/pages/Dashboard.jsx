@@ -1,21 +1,19 @@
 import { useEffect } from "react";
 import { UseUserContext } from "../context/UserContext";
-//import { useNavigate } from "react-router-dom";
-//import { ADMIN_DASHBOARD_ROUTE } from "../router/index";
+
 import UserApi from "../services/Api/User/UserApi";
 
 export default function Dashboard() {
   const { user, setTask, task } = UseUserContext();
-  //const navigate = useNavigate();
-  useEffect(() => {
-    // if (user.role === "Admin") {
-    //   navigate(ADMIN_DASHBOARD_ROUTE);
-    // }
-    UserApi.getTask(user.id).then(({ data }) => {
-      setTask(data.task);
-    });
-  }, []);
 
+  useEffect(() => {
+    if (user.role === "Member") {
+      UserApi.getTask(user.id).then(({ data }) => {
+        setTask(data.task);
+      });
+    }
+  }, [user.id, setTask, user.role]);
+  console.log(user);
   console.log(task);
   return (
     <>

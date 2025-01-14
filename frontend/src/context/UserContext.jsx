@@ -30,6 +30,7 @@ export default function UserContext({ children }) {
     return UserApi.login(email, password);
   };
   const logout = () => {
+    
     setUser({});
     setAuthenticated(false);
   };
