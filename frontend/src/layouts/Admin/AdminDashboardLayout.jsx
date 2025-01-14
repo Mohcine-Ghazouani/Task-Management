@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import AdminNavbar from "../../components/AdminNavbar";
 import AdminSidebar from "../../components/AdminSidebar";
 import { LOGIN_ROUTE } from "../../router/index";
 import { useEffect, useState } from "react";
@@ -53,7 +53,7 @@ export default function AdminDashbordLayout() {
   return (
     <>
       <header className="h-16">
-        <Navbar />
+        <AdminNavbar />
       </header>
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <main

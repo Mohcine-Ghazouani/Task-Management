@@ -17,6 +17,8 @@ export const REGISTER_ROUTE = "/register";
 export const LOGIN_ROUTE = "/";
 export const DASHBOARD_ROUTE = "/dashboard";
 export const ADMIN_DASHBOARD_ROUTE = "/admindashboard";
+export const PROFILE_ROUTE = "/profile";
+export const ADMIN_PROFILE_ROUTE = "/adminprofile";
 
 export const router = createBrowserRouter([
   {
@@ -46,20 +48,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: DASHBOARD_ROUTE,
-        element: (
-          //<ProtectedRoute allowedRoles={["Member"]}>
-            <Dashboard />
-          //</ProtectedRoute>
-          
-        ),
+        element: <Dashboard />,
       },
       {
-        path: "/profile",
-        element: (
-          //<ProtectedRoute allowedRoles={["Member"]}>
-            <Profile />
-          //</ProtectedRoute>
-        ),
+        path: PROFILE_ROUTE,
+        element: <Profile />,
       },
     ],
   },
@@ -68,29 +61,19 @@ export const router = createBrowserRouter([
     children: [
       {
         path: ADMIN_DASHBOARD_ROUTE,
-        element: (
-          //<ProtectedRoute allowedRoles={["Admin"]}>
-            <AdminDashboard />
-          //</ProtectedRoute>
-          
-        ),
+        element: <AdminDashboard />,
       },
 
       {
         path: "/users",
-        element: (
-          //<ProtectedRoute allowedRoles={["Admin"]}>
-            <Users />
-          //</ProtectedRoute>
-          
-        ),
+        element: <Users />,
       },
       {
-        path: "/profile",
+        path: ADMIN_PROFILE_ROUTE,
         element: (
-          //<ProtectedRoute allowedRoles={["Admin"]}>
-            <Profile />
-          //</ProtectedRoute>
+          
+          <Profile />
+   
         ),
       },
     ],
