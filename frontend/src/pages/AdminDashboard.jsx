@@ -8,8 +8,8 @@ export default function AdminDashboard() {
     UserApi.getTasks().then(({ data }) => {
       setTasks(data.tasks);
     });
-    //console.log(tasks);
-  }, [user]);
+    console.log(tasks);
+  }, []);
   return (
     <>
       <div>

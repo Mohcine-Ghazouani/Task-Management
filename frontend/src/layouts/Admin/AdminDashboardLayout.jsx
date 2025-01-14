@@ -1,12 +1,12 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
+import AdminSidebar from "../../components/AdminSidebar";
 import { LOGIN_ROUTE } from "../../router/index";
 import { useEffect, useState } from "react";
 import { axiosClient } from "../../api/axios";
 import { UseUserContext } from "../../context/UserContext";
 import UserApi from "../../services/Api/User/UserApi";
-import { set } from "zod";
+//import { set } from "zod";
 
 export default function AdminDashbordLayout() {
 
@@ -55,13 +55,14 @@ export default function AdminDashbordLayout() {
       <header className="h-16">
         <Navbar />
       </header>
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <main
         className={`main flex-grow transition-all duration-300 ease-in-out 
           ${sidebarOpen && !isMobile ? "mx-52" : ""}
         ${!sidebarOpen && !isMobile ? "mx-20" : ""}
         ${isMobile ? "mx-4" : ""}`}
       >
+        <h1>Admin Dashboard</h1>
         <Outlet />
       </main>
       {/* <footer>footer</footer> */}

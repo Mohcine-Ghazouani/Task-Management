@@ -28,7 +28,7 @@ export default function UserDashbordLayout() {
       .catch((reason) => {
         console.log(reason);
         logout();
-        
+        navigate(LOGIN_ROUTE);
       });
     }else{
       navigate(LOGIN_ROUTE);
@@ -61,6 +61,7 @@ export default function UserDashbordLayout() {
         ${!sidebarOpen && !isMobile ? "mx-20" : ""}
         ${isMobile ? "mx-4" : ""}`}
       >
+        <h1>Member Dashboard</h1>
         <Outlet />
       </main>
       {/* <footer>footer</footer> */}

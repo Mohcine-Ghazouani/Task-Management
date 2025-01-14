@@ -2,16 +2,17 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
- 
+  
   House,
   Users,
   AlignJustify,
 } from "lucide-react";
+
 import PropTypes from 'prop-types';
 
-export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
+export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
   const isMobile = window.innerWidth < 768;
-  Sidebar.propTypes = {
+  AdminSidebar.propTypes = {
     sidebarOpen: PropTypes.bool.isRequired,
     setSidebarOpen: PropTypes.func.isRequired,
   };
@@ -49,7 +50,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
         <div className="p-3">
           <Link
-            to="/Dashboard"
+            to="/AdminDashboard"
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
             <House className="h-6 w-6" />

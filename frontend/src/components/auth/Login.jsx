@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { UseUserContext } from "../../context/UserContext";
 
 import { useNavigate } from "react-router-dom";
-import { DASHBOARD_ROUTE } from "../../router/index";
+import { ADMIN_DASHBOARD_ROUTE, DASHBOARD_ROUTE } from "../../router/index";
 
 const formSchema = z.object({
   email: z.string().email().nonempty("Email is required"),
@@ -18,10 +18,6 @@ export default function MemberLogin() {
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
   });
 
   const {
@@ -31,10 +27,22 @@ export default function MemberLogin() {
 
   const onSubmit = async (values) => {
     await login(values.email, values.password)
-      .then((value) => {
-        if (value.status === 204) {
+      .then(({ status, data }) => {
+        if (status === 200) {
+          const { role } = data.user;
+          switch (role) {
+            case "Member":
+              navigate(DASHBOARD_ROUTE);
+              break;
+            case "Admin":
+              navigate(ADMIN_DASHBOARD_ROUTE);
+              break;
+            
+          }
+          console.log(role);
+          console.log(data);
           setAuthenticated(true);
-          navigate(DASHBOARD_ROUTE);
+          //navigate(DASHBOARD_ROUTE);
         }
       })
       .catch(({ response }) => {
