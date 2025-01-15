@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  
+  Plus,
   House,
   Users,
   AlignJustify,
@@ -46,7 +46,7 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
         }`}
       >
         <div className="flex items-center justify-between h-16 bg-gray-100 border-b border-gray-300 px-4">
-          {/* Sidebar Header */}
+          
         </div>
         <div className="p-3">
           <Link
@@ -62,6 +62,13 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
           >
             <Users className="h-6 w-6" />
             {sidebarOpen && <span className="ml-4">Users</span>}
+          </Link>
+          <Link
+            to="/add-task"
+            className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
+          >
+            <Plus className="h-6 w-6" />
+            {sidebarOpen && <span className="ml-4">Add Task</span>}
           </Link>
           
         </div>

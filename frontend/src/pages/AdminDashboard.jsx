@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 import { UseUserContext } from "../context/UserContext";
 import UserApi from "../services/Api/User/UserApi";
-import {axiosClient} from "../api/axios";
+import { axiosClient } from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
-  const { user, tasks, setTasks, users ,setUsers} = UseUserContext();
+  const { user, tasks, setTasks, users, setUsers } = UseUserContext();
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTask, setEditedTask] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user.role === "Admin") {
-      
       UserApi.getTasks().then(({ data }) => {
         setTasks(data.tasks);
       });
       axiosClient.get("/users").then(({ data }) => {
-            setUsers(data.users);
-          });
+        setUsers(data.users);
+      });
     }
   }, [setTasks, user.role]);
 
@@ -68,11 +69,12 @@ export default function AdminDashboard() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-800">Tasks List</h2>
           <button
-            // Add task functionality here
+            onClick={() => navigate("/add-task")}
             className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
           >
             Add Task
           </button>
+         
         </div>
         {tasks.map((task) => (
           <div key={task.id} className="border p-4 rounded-lg bg-white shadow">

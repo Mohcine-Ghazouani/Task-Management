@@ -9,9 +9,10 @@ import Profile from "../pages/Profile";
 import Layout from "../layouts/Layout";
 import GuestLayout from "../layouts/GuestLayout";
 import NotFound from "../pages/NotFound";
-import NotAuthorized from "../pages/NotAuthorized";
+
 import UserDashbordLayout from "../layouts/user/UserDashboardLayout";
 import AdminDashbordLayout from "../layouts/Admin/AdminDashboardLayout";
+import AddTask from "../pages/AddTask";
 //import ProtectedRoute from "./ProtectedRoute";
 
 export const REGISTER_ROUTE = "/register";
@@ -29,10 +30,7 @@ export const router = createBrowserRouter([
         path: "*",
         element: <NotFound />,
       },
-      {
-        path: "/not-authorized",
-        element: <NotAuthorized />,
-      },
+     
     ],
   },
   {
@@ -80,6 +78,10 @@ export const router = createBrowserRouter([
       {
         path: "/users",
         element: <Users />,
+      },
+      {
+        path: "/add-task",
+        element: <AddTask />,
       },
       {
         path: ADMIN_PROFILE_ROUTE,

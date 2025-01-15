@@ -40,6 +40,15 @@ class NotificationController extends Controller
             ], 404);
         }
     }
+    public function getUserNotifications(Request $request)
+    {
+        $userId = $request->user()->id; // Assuming you get the user's ID from the authenticated user
+        $notifications = $this->notificationService->getNotificationsByUserId($userId); // Assuming you're using a service
+        return response()->json([
+            'notifications' => $notifications,
+        ]);
+    }
+
 
     // public function store(Request $request)
     // {

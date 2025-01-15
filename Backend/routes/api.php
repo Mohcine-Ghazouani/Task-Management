@@ -43,6 +43,7 @@ Route::put('/comments/{id}', [CommentController::class, 'update']);
 Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
 
 
+Route::get('/notification', [NotificationController::class, 'getUserNotifications'])->middleware('auth');
 
 Route::get('/notifications', [NotificationController::class, 'index']); 
 Route::get('/notifications/{id}', [NotificationController::class, 'show']); 

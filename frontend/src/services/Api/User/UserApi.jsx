@@ -31,12 +31,21 @@ const UserApi = {
   getTask: async (id) => {
     return await axiosClient.get(`/tasks/${id}`)
   },
+  createTask: async (taskData) => {
+    return await axiosClient.post('/tasks', taskData)
+  },  
 
   updateTask: async (id, taskData) => {
     return await axiosClient.put(`/tasks/${id}`, taskData)
   },
   deleteTask: async (id) => {
     return await axiosClient.delete(`/tasks/${id}`)
+  },
+  getNotifications: async () => {
+    return await axiosClient.get('/notifications')
+  },
+  updateNotification: async (id ) => {
+    return await axiosClient.put(`/notifications/${id}`, {is_read: true})
   },
 
 };

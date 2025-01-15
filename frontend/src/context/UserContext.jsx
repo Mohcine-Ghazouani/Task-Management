@@ -9,7 +9,9 @@ const UserStateContext = createContext({
   setTasks : () => {},
   user: {},
   setUser: () => {},
-  
+  Notification: {},
+  setNotification: () => {},
+ 
   users: [],
   authenticated: false,
   setAuthenticated: () => {},
@@ -19,6 +21,7 @@ const UserStateContext = createContext({
   updateUser: (id, userData) => {},
 });
 export default function UserContext({ children }) {
+  
   const [task, setTask] = useState({});
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);

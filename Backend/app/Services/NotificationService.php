@@ -30,6 +30,12 @@ class NotificationService
         return Notification::find($id);
     }
 
+    public function getNotificationsByUserId($userId)
+    {
+        return Notification::where('user_id', $userId)->get();
+    }
+
+
     /**
      * Update a notification's status.
      */
