@@ -9,6 +9,7 @@ import Profile from "../pages/Profile";
 import Layout from "../layouts/Layout";
 import GuestLayout from "../layouts/GuestLayout";
 import NotFound from "../pages/NotFound";
+import NotAuthorized from "../pages/NotAuthorized";
 import UserDashbordLayout from "../layouts/user/UserDashboardLayout";
 import AdminDashbordLayout from "../layouts/Admin/AdminDashboardLayout";
 //import ProtectedRoute from "./ProtectedRoute";
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
         path: "*",
         element: <NotFound />,
       },
+      {
+        path: "/not-authorized",
+        element: <NotAuthorized />,
+      },
     ],
   },
   {
@@ -44,7 +49,11 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <UserDashbordLayout />,
+    element: (
+      //<ProtectedRoute allowedRoles={["Member"]}>
+        <UserDashbordLayout />
+      //</ProtectedRoute>
+    ),
     children: [
       {
         path: DASHBOARD_ROUTE,
@@ -57,7 +66,11 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <AdminDashbordLayout />,
+    element: (
+      //<ProtectedRoute allowedRoles={["Admin"]}>
+        <AdminDashbordLayout />
+      //</ProtectedRoute>
+    ),
     children: [
       {
         path: ADMIN_DASHBOARD_ROUTE,

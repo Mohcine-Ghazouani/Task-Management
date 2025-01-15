@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import { LOGIN_ROUTE } from "../../router/index";
+import { LOGIN_ROUTE, ADMIN_DASHBOARD_ROUTE } from "../../router/index";
 import { useEffect, useState } from "react";
 import { axiosClient } from "../../api/axios";
 import { UseUserContext } from "../../context/UserContext";
@@ -18,7 +18,12 @@ export default function UserDashbordLayout() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (authenticated === true) {
+    //const { role } = user;
+      
+    if (authenticated === true ) {
+      // if (role === "Admin") {
+      //   navigate(ADMIN_DASHBOARD_ROUTE);
+      // }
       setIsLoading(false);
       UserApi.getUser()
       .then(({ data }) => {

@@ -55,13 +55,13 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
             <House className="h-6 w-6" />
             {sidebarOpen && <span className="ml-4">Dashboard</span>}
           </Link>
-          <Link
+          {/* <Link
             to="/Users"
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
             <Users className="h-6 w-6" />
             {sidebarOpen && <span className="ml-4">Users</span>}
-          </Link>
+          </Link> */}
           
         </div>
       </div>

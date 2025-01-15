@@ -1,40 +1,40 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import AdminNavbar from "../../components/AdminNavbar";
 import AdminSidebar from "../../components/AdminSidebar";
-import { LOGIN_ROUTE } from "../../router/index";
+import { LOGIN_ROUTE, DASHBOARD_ROUTE } from "../../router/index";
 import { useEffect, useState } from "react";
 import { axiosClient } from "../../api/axios";
 import { UseUserContext } from "../../context/UserContext";
 import UserApi from "../../services/Api/User/UserApi";
-//import { set } from "zod";
 
 export default function AdminDashbordLayout() {
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = window.innerWidth < 768;
 
-  const { user, setUser, authenticated, setAuthenticated, logout } = UseUserContext();
-  
+  const { user, setUser, authenticated, setAuthenticated, logout } =
+    UseUserContext();
+
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-
+  //const { role } = user;
   useEffect(() => {
     if (authenticated === true) {
+      // if (role === "Member") {
+      //   navigate(DASHBOARD_ROUTE);
+      // }
       setIsLoading(false);
       UserApi.getUser()
-      .then(({ data }) => {
-        setUser(data);
-        setAuthenticated(true);
-      })
-      .catch((reason) => {
-        console.log(reason);
-        logout();
-        
-      });
-    }else{
+        .then(({ data }) => {
+          setUser(data);
+          setAuthenticated(true);
+        })
+        .catch((reason) => {
+          console.log(reason);
+          logout();
+        });
+    }else {
       navigate(LOGIN_ROUTE);
     }
-    
   }, [authenticated]);
 
   const teamId = user.team_id;
