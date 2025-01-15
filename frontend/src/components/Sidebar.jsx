@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import {
  
   House,
-  Users,
   AlignJustify,
 } from "lucide-react";
 import PropTypes from 'prop-types';

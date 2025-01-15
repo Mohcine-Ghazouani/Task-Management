@@ -18,12 +18,27 @@ const UserApi = {
   getUsers: async () => {
     return await axiosClient.get('/users')
   },  
+  deleteUser: async (id) => {
+    return await axiosClient.delete(`/users/${id}`)
+  },
+  updateUser: async (id, userData) => {
+    return await axiosClient.put(`/users/${id}`, userData)
+  },
+
   getTasks: async () => {
     return await axiosClient.get('/tasks')
   },
   getTask: async (id) => {
     return await axiosClient.get(`/tasks/${id}`)
   },
+
+  updateTask: async (id, taskData) => {
+    return await axiosClient.put(`/tasks/${id}`, taskData)
+  },
+  deleteTask: async (id) => {
+    return await axiosClient.delete(`/tasks/${id}`)
+  },
+
 };
 
 export default UserApi

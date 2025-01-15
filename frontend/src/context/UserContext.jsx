@@ -15,6 +15,8 @@ const UserStateContext = createContext({
   setAuthenticated: () => {},
   login: (email, password) => {},
   logout: () => {},
+  
+  updateUser: (id, userData) => {},
 });
 export default function UserContext({ children }) {
   const [task, setTask] = useState({});
@@ -38,6 +40,20 @@ export default function UserContext({ children }) {
   const setAuthenticated = (isAuthenticated) => {
     _setAuthenticated(isAuthenticated);
     window.localStorage.setItem("AUTHENTICATED", isAuthenticated);
+  };
+
+ 
+
+
+  const updateUser = async (id, userData) => {
+    try {
+      const { data } = await UserApi.updateUser(id, userData); // Assuming `updateUser` is defined in UserApi
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => (user.id === id ? data.user : user))
+      );
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
   };
 
   return (
