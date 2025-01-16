@@ -13,6 +13,9 @@ import NotFound from "../pages/NotFound";
 import UserDashbordLayout from "../layouts/user/UserDashboardLayout";
 import AdminDashbordLayout from "../layouts/Admin/AdminDashboardLayout";
 import AddTask from "../pages/AddTask";
+import AddUser from "../pages/AddUser";
+import Teams from "../pages/Teams";
+import AddTeam from "../pages/AddTeam";
 //import ProtectedRoute from "./ProtectedRoute";
 
 export const REGISTER_ROUTE = "/register";
@@ -74,10 +77,22 @@ export const router = createBrowserRouter([
         path: ADMIN_DASHBOARD_ROUTE,
         element: <AdminDashboard />,
       },
+      {
+        path: "/teams",
+        element: <Teams />,
+      },
+      {
+        path: "/add-team",
+        element: <AddTeam />,
+      },
 
       {
         path: "/users",
         element: <Users />,
+      },
+      {
+        path: "/add-user",
+        element: <AddUser />,
       },
       {
         path: "/add-task",

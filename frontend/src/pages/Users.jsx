@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { UseUserContext } from "../context/UserContext";
 import { axiosClient } from "../api/axios";
 import UserApi from "../services/Api/User/UserApi";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Users() {
@@ -9,6 +10,7 @@ export default function Users() {
   const [editingUserId, setEditingUserId] = useState(null);
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axiosClient.get("/users").then(({ data }) => {
@@ -60,7 +62,9 @@ export default function Users() {
     <div className="container my-4 space-y-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-gray-800">Users List</h2>
-        <button className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">
+        <button 
+        onClick={() => navigate("/add-user")}
+        className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">
           Add User
         </button>
       </div>

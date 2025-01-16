@@ -57,8 +57,7 @@ export default function AdminDashboard() {
     setEditingTaskId(null);
     setEditedTask({});
   };
-  console.log(tasks);
-  console.log(users);
+ 
 
   return (
     <div>

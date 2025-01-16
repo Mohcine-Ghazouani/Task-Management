@@ -1,14 +1,8 @@
-
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  Plus,
-  House,
-  Users,
-  AlignJustify,
-} from "lucide-react";
+import { UserCog,Plus, House, Users, UserPlus, AlignJustify } from "lucide-react";
 
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
   const isMobile = window.innerWidth < 768;
@@ -45,17 +39,40 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
             : "w-16"
         }`}
       >
-        <div className="flex items-center justify-between h-16 bg-gray-100 border-b border-gray-300 px-4">
-          
-        </div>
+        <div className="flex items-center justify-between h-16 bg-gray-100 border-b border-gray-300 px-4"></div>
         <div className="p-3">
           <Link
             to="/AdminDashboard"
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
             <House className="h-6 w-6" />
-            {sidebarOpen && <span className="ml-4">Dashboard</span>}
+            {sidebarOpen && <span className="ml-4">Tasks</span>}
           </Link>
+          {/* <Link
+            to="/add-task"
+            className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
+          >
+            <Plus className="h-6 w-6" />
+            {sidebarOpen && <span className="ml-4">Add Task</span>}
+          </Link> */}
+          <Link
+            to="/teams"
+            className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
+          >
+            <UserCog className="h-6 w-6" />
+            {sidebarOpen && <span className="ml-4">Teams</span>}
+          </Link>
+          {/* <Link
+            to="/add-team"
+            className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
+          >
+            <Plus className="h-6 w-6" />
+            {sidebarOpen && <span className="ml-4">Add Team</span>}
+          </Link> */}
+
+
+
+
           <Link
             to="/Users"
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
@@ -63,14 +80,19 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
             <Users className="h-6 w-6" />
             {sidebarOpen && <span className="ml-4">Users</span>}
           </Link>
-          <Link
+
+
+
+
+
+
+          {/* <Link
             to="/add-task"
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
-            <Plus className="h-6 w-6" />
-            {sidebarOpen && <span className="ml-4">Add Task</span>}
-          </Link>
-          
+            <UserPlus className="h-6 w-6" />
+            {sidebarOpen && <span className="ml-4">Add User</span>}
+          </Link> */}
         </div>
       </div>
       {isMobile && sidebarOpen && (
@@ -82,23 +104,3 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

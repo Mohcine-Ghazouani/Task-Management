@@ -18,11 +18,23 @@ const UserApi = {
   getUsers: async () => {
     return await axiosClient.get('/users')
   },  
+  createUser: async (userData) => {
+    return await axiosClient.post('/users', userData)
+  },
   deleteUser: async (id) => {
     return await axiosClient.delete(`/users/${id}`)
   },
   updateUser: async (id, userData) => {
     return await axiosClient.put(`/users/${id}`, userData)
+  },
+  getTeams: async () => {
+    return await axiosClient.get('/teams')
+  },
+  createTeam: async (teamData) => {
+    return await axiosClient.post('/teams', teamData)
+  },
+  updateTeam: async (id, teamData) => {
+    return await axiosClient.put(`/teams/${id}`, teamData)
   },
 
   getTasks: async () => {

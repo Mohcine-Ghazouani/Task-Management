@@ -24,6 +24,7 @@ export default function UserContext({ children }) {
   
   const [task, setTask] = useState({});
   const [tasks, setTasks] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
   const [authenticated, _setAuthenticated] = useState(
@@ -48,21 +49,24 @@ export default function UserContext({ children }) {
  
 
 
-  const updateUser = async (id, userData) => {
-    try {
-      const { data } = await UserApi.updateUser(id, userData); // Assuming `updateUser` is defined in UserApi
-      setUsers((prevUsers) =>
-        prevUsers.map((user) => (user.id === id ? data.user : user))
-      );
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
+  // const updateUser = async (id, userData) => {
+  //   try {
+  //     const { data } = await UserApi.updateUser(id, userData); // Assuming `updateUser` is defined in UserApi
+  //     setUsers((prevUsers) =>
+  //       prevUsers.map((user) => (user.id === id ? data.user : user))
+  //     );
+  //   } catch (error) {
+  //     console.error("Error updating user:", error);
+  //   }
+  // };
 
   return (
     <>
       <UserStateContext.Provider
         value={{
+          //updateUser,
+          teams,
+          setTeams,
           task,
           setTask,
           tasks,
