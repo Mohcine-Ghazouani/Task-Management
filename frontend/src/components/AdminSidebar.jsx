@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { UserCog,Plus, House, Users, UserPlus, AlignJustify } from "lucide-react";
+import { UserCog,ClipboardList, House, AlignJustify } from "lucide-react";
 
 import PropTypes from "prop-types";
 
@@ -46,7 +46,7 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
             <House className="h-6 w-6" />
-            {sidebarOpen && <span className="ml-4">Tasks</span>}
+            {sidebarOpen && <span className="ml-4">Dashboard</span>}
           </Link>
           {/* <Link
             to="/add-task"
@@ -74,11 +74,11 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
 
 
           <Link
-            to="/Users"
+            to="/Tasks"
             className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
           >
-            <Users className="h-6 w-6" />
-            {sidebarOpen && <span className="ml-4">Users</span>}
+            <ClipboardList className="h-6 w-6" />
+            {sidebarOpen && <span className="ml-4">Tasks</span>}
           </Link>
 
 

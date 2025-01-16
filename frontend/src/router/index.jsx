@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Login from "../components/auth/Login";
 import Register from "../components/auth/Register";
-import Users from "../pages/Users";
+import Tasks from "../pages/Tasks";
 import Dashboard from "../pages/Dashboard";
 import AdminDashboard from "../pages/AdminDashboard";
 import Profile from "../pages/Profile";
@@ -87,8 +87,8 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "/users",
-        element: <Users />,
+        path: "/Tasks",
+        element: <Tasks />,
       },
       {
         path: "/add-user",

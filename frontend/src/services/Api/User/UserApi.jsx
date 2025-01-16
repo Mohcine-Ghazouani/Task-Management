@@ -33,8 +33,8 @@ const UserApi = {
   createTeam: async (teamData) => {
     return await axiosClient.post('/teams', teamData)
   },
-  updateTeam: async (id, teamData) => {
-    return await axiosClient.put(`/teams/${id}`, teamData)
+  updateTeam: async (id,name) => {
+    return await axiosClient.put(`/teams/${id}`, name)
   },
 
   getTasks: async () => {

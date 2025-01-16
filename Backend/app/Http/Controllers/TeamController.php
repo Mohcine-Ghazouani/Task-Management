@@ -64,6 +64,7 @@ class TeamController extends Controller
 
         if ($updated) {
             return response()->json([
+                'name' => $request->name,
                 'success' => true,
                 'message' => 'Team updated successfully!',
             ]);
