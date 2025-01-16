@@ -32,7 +32,7 @@ export default function AdminDashbordLayout() {
           console.log(reason);
           logout();
         });
-    }else {
+    } else {
       navigate(LOGIN_ROUTE);
     }
   }, [authenticated]);
@@ -62,7 +62,9 @@ export default function AdminDashbordLayout() {
         ${!sidebarOpen && !isMobile ? "mx-20" : ""}
         ${isMobile ? "mx-4" : ""}`}
       >
-        <h1>Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold text-center">
+          {user.role} 
+        </h1>
         <Outlet />
       </main>
       {/* <footer>footer</footer> */}

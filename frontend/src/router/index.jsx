@@ -2,20 +2,25 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Login from "../components/auth/Login";
 import Register from "../components/auth/Register";
-import Tasks from "../pages/Tasks";
-import Dashboard from "../pages/Dashboard";
-import AdminDashboard from "../pages/AdminDashboard";
-import Profile from "../pages/Profile";
+
 import Layout from "../layouts/Layout";
 import GuestLayout from "../layouts/GuestLayout";
-import NotFound from "../pages/NotFound";
-
 import UserDashbordLayout from "../layouts/user/UserDashboardLayout";
 import AdminDashbordLayout from "../layouts/Admin/AdminDashboardLayout";
-import AddTask from "../pages/AddTask";
-import AddUser from "../pages/AddUser";
-import Teams from "../pages/Teams";
-import AddTeam from "../pages/AddTeam";
+
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import Tasks from "../pages/Admin/Tasks";
+import AddTask from "../pages/Admin/AddTask";
+import AddUser from "../pages/Admin/AddUser";
+import Teams from "../pages/Admin/Teams";
+import AddTeam from "../pages/Admin/AddTeam";
+
+import Dashboard from "../pages/Member/Dashboard";
+
+import Profile from "../pages/Profile";
+import NotFound from "../pages/NotFound";
+
+
 //import ProtectedRoute from "./ProtectedRoute";
 
 export const REGISTER_ROUTE = "/register";

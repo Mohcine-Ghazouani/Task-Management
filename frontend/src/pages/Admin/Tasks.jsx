@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { UseUserContext } from "../context/UserContext";
-import UserApi from "../services/Api/User/UserApi";
+import { UseUserContext } from "../../context/UserContext";
+import UserApi from "../../services/Api/User/UserApi";
 
 import { useNavigate } from "react-router-dom";
 
@@ -60,9 +60,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-center">
-        {user.role} {user.name}
-      </h1>
+      
       <div className="container my-4 space-y-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-800">Tasks List</h2>

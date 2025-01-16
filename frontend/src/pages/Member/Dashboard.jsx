@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { UseUserContext } from "../context/UserContext";
+import { UseUserContext } from "../../context/UserContext";
 
-import UserApi from "../services/Api/User/UserApi";
+import UserApi from "../../services/Api/User/UserApi";
 
 export default function Dashboard() {
   const { user, setTask, task } = UseUserContext();

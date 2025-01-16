@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
-import { UseUserContext } from "../context/UserContext";
-import UserApi from "../services/Api/User/UserApi";
+import { UseUserContext } from "../../context/UserContext";
+import UserApi from "../../services/Api/User/UserApi";
 import { useNavigate } from "react-router-dom";
-import {axiosClient} from "../api/axios";
+import { axiosClient } from "../../api/axios";
 
 export default function AddUser() {
-  const { setUsers, teams ,setTeams } = UseUserContext();
+  const { setUsers, teams, setTeams } = UseUserContext();
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
-    role: "Member", 
-    team_id: "", 
+    role: "Member",
+    team_id: "",
     password: "12341234",
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-      axiosClient.get("/teams").then(({ data }) => {
-            setTeams(data.teams);
-      });
+    axiosClient.get("/teams").then(({ data }) => {
+      setTeams(data.teams);
+    });
   }, []);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,24 +31,42 @@ export default function AddUser() {
     UserApi.createUser(newUser)
       .then(({ data }) => {
         setUsers((prevUsers) => [...prevUsers, data.user]);
-        navigate("/users"); 
+        navigate("/users");
       })
       .catch((error) => {
         console.error("Error adding user:", error);
         setError("Failed to add user. Please try again.");
       });
   };
-console.log(teams);
+  console.log(teams);
   return (
     <div className="container mx-auto my-8">
-      <h1 className="text-2xl font-bold text-center mb-6">Add New User</h1>
-      {error && (
-        <p className="text-red-500 text-center mb-4">{error}</p>
-      )}
+      {/* <h1 className="text-2xl font-bold text-center mb-6"></h1> */}
+      {/* <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Add New User</h2>
+        <button
+          onClick={() => navigate("/AdminDashboard")}
+          className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+        >
+          Back
+        </button>
+      </div> */}
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       <form
         onSubmit={handleSubmit}
         className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 space-y-4"
       >
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+            Add New User
+          </h2>
+          <button
+            onClick={() => navigate("/AdminDashboard")}
+            className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+          >
+            Back
+          </button>
+        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Name

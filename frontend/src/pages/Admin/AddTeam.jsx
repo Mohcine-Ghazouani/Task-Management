@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { axiosClient } from "../api/axios";
+import { axiosClient } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 export default function AddTeam() {
