@@ -24,6 +24,11 @@ class TaskService
         return Task::with('user')->find($id);
     }
 
+    public function getTasksByUserId($userId)
+    {
+        return Task::where('user_id', $userId) ->with('user')->get();
+    }
+
     public function createTask($data)
     {
         $task = Task::create($data);

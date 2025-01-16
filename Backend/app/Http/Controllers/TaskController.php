@@ -41,6 +41,13 @@ class TaskController extends Controller
             ], 404);
         }
     }
+    public function getTasksByUserId($userId) {
+        $tasks = $this->taskService->getTasksByUserId($userId);
+        return response()->json([
+            'success' => true,
+            'tasks' => $tasks,
+        ]);
+    }
 
     public function store(Request $request)
     {

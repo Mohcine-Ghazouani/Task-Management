@@ -43,6 +43,9 @@ const UserApi = {
   getTask: async (id) => {
     return await axiosClient.get(`/tasks/${id}`)
   },
+  getUserTasks: async (userId) => {
+    return await axiosClient.get(`/tasks/user/${userId}`)
+  },
   createTask: async (taskData) => {
     return await axiosClient.post('/tasks', taskData)
   },  
@@ -55,6 +58,9 @@ const UserApi = {
   },
   getNotifications: async () => {
     return await axiosClient.get('/notifications')
+  },
+  getUserNotifications: async () => {
+    return await axiosClient.get(`/notification`)
   },
   updateNotification: async (id ) => {
     return await axiosClient.put(`/notifications/${id}`, {is_read: true})

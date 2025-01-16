@@ -5,6 +5,7 @@ import UserApi from "../services/Api/User/UserApi";
 const UserStateContext = createContext({
   task : {},
   tasks : [],
+
   setTask : () => {},
   setTasks : () => {},
   user: {},
@@ -21,7 +22,7 @@ const UserStateContext = createContext({
   updateUser: (id, userData) => {},
 });
 export default function UserContext({ children }) {
-  
+  const [userTask, setUserTask] = useState([]);
   const [task, setTask] = useState({});
   const [tasks, setTasks] = useState([]);
   const [teams, setTeams] = useState([]);
@@ -65,6 +66,8 @@ export default function UserContext({ children }) {
       <UserStateContext.Provider
         value={{
           //updateUser,
+          userTask,
+          setUserTask,
           teams,
           setTeams,
           task,
