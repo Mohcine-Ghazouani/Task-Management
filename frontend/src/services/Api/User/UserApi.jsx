@@ -66,8 +66,8 @@ const UserApi = {
     return await axiosClient.put(`/notifications/${id}`, {is_read: true})
   },
   
-  getComment: async (id) => {
-    return await axiosClient.get(`/comments/${id}`)
+  getComments: async () => {
+    return await axiosClient.get(`/comments`)
   },
   createComment: async (commentData) => {
     return await axiosClient.post('/comments', commentData)

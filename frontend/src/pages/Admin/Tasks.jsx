@@ -5,7 +5,8 @@ import UserApi from "../../services/Api/User/UserApi";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
-  const { user, tasks, setTasks, users, setUsers } = UseUserContext();
+  const { user, tasks, setTasks, users, setUsers, comments, setComments } =
+    UseUserContext();
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTask, setEditedTask] = useState({});
   const navigate = useNavigate();
@@ -15,11 +16,15 @@ export default function AdminDashboard() {
       UserApi.getTasks().then(({ data }) => {
         setTasks(data.tasks);
       });
-        UserApi.getUsers().then(({ data }) => {
-            setUsers(data.users);
-        });
+      UserApi.getUsers().then(({ data }) => {
+        setUsers(data.users);
+      });
+      UserApi.getComments().then(({ data }) => {
+       
+        setComments(data.comments);
+      });
     }
-  }, [setTasks, user.role , setUsers]);
+  }, [setTasks,tasks, setComments]);
   const handleDelete = (id) => {
     if (confirm("Are you sure you want to delete this task?")) {
       UserApi.deleteTask(id)
@@ -31,7 +36,7 @@ export default function AdminDashboard() {
         });
     }
   };
-
+  console.log(tasks);
   const handleEdit = (task) => {
     setEditingTaskId(task.id);
     setEditedTask({ ...task });
@@ -56,11 +61,9 @@ export default function AdminDashboard() {
     setEditingTaskId(null);
     setEditedTask({});
   };
- 
 
   return (
     <div>
-      
       <div className="container my-4 space-y-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-800">Tasks List</h2>
@@ -70,7 +73,6 @@ export default function AdminDashboard() {
           >
             Add Task
           </button>
-         
         </div>
         {tasks.map((task) => (
           <div key={task.id} className="border p-4 rounded-lg bg-white shadow">
@@ -139,8 +141,7 @@ export default function AdminDashboard() {
                         <option value="In progress">In progress</option>
                         <option value="Completed">Completed</option>
                       </select>
-                    ) :
-                    task.status === "Completed" ? (
+                    ) : task.status === "Completed" ? (
                       <p className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded">
                         Completed
                       </p>
@@ -238,7 +239,28 @@ export default function AdminDashboard() {
                     ) : task.user ? (
                       task.user.name
                     ) : (
-                      "Unassigned"
+                      <p className="text-red-500">Unassigned</p>
+                      
+                    )}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <th className="text-left p-3 font-medium text-gray-700">
+                    Comments:
+                  </th>
+                  <td className="text-gray-600">
+                    {comments.some(
+                        (comment) => comment.task_id === task.id
+                      ) ? (
+                      comments
+                        .filter((comment) => comment.task_id === task.id)
+                        .map((comment, index) => (
+                          <p key={index} className="text-sm text-gray-700">
+                            {comment.content}
+                          </p>
+                        ))
+                    ) : (
+                      <p className="text-red-500">No comments</p>
                     )}
                   </td>
                 </tr>
