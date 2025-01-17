@@ -65,6 +65,16 @@ const UserApi = {
   updateNotification: async (id ) => {
     return await axiosClient.put(`/notifications/${id}`, {is_read: true})
   },
+  
+  getComment: async (id) => {
+    return await axiosClient.get(`/comments/${id}`)
+  },
+  createComment: async (commentData) => {
+    return await axiosClient.post('/comments', commentData)
+  },
+  getUserComments: async (userId) => {
+    return await axiosClient.get(`/comments/user/${userId}`)
+  },
 
 };
 

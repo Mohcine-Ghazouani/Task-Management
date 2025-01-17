@@ -36,7 +36,7 @@ Route::post('/teams', [TeamController::class, 'store']);
 Route::put('/teams/{id}', [TeamController::class, 'update']);
 Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
 
-
+Route::get('/comments/user/{id}', [CommentController::class, 'getCommentsByUserId']);
 Route::get('/comments', [CommentController::class, 'index']);  
 Route::get('/comments/{id}', [CommentController::class, 'show']); 
 Route::post('/comments', [CommentController::class, 'store']); 

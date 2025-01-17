@@ -9,19 +9,19 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  const { logout, user } = UseUserContext();
+  const { logout } = UseUserContext();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  console.log("user", user.id);
+
   useEffect(() => {
     UserApi.getUserNotifications().then(({ data }) => {
       setNotifications(data.notifications);
       setUnreadCount(data.notifications.filter((n) => !n.is_read).length);
     });
   }, [notifications]);
-  console.log("notifications", notifications);
+
   const markNotificationAsRead = (id) => {
     UserApi.updateNotification(id);
   };

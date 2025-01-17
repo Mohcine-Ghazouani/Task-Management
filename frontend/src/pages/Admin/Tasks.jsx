@@ -139,7 +139,7 @@ export default function AdminDashboard() {
                         <option value="In progress">In progress</option>
                         <option value="Completed">Completed</option>
                       </select>
-                    ) : // task.status
+                    ) :
                     task.status === "Completed" ? (
                       <p className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded">
                         Completed

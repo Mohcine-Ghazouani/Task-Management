@@ -21,6 +21,10 @@ class CommentService
     {
         return Comment::find($id);
     }
+    public function getCommentByUserId($id)
+    {
+        return Comment::where('user_id', $id)->get();
+    }
 
     /**
      * Create a new comment.

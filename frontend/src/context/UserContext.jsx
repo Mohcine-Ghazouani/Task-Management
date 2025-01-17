@@ -22,6 +22,7 @@ const UserStateContext = createContext({
   updateUser: (id, userData) => {},
 });
 export default function UserContext({ children }) {
+  const [comments, setComments] = useState([]);
   const [userTask, setUserTask] = useState([]);
   const [task, setTask] = useState({});
   const [tasks, setTasks] = useState([]);
@@ -66,6 +67,8 @@ export default function UserContext({ children }) {
       <UserStateContext.Provider
         value={{
           //updateUser,
+          comments,
+          setComments,
           userTask,
           setUserTask,
           teams,

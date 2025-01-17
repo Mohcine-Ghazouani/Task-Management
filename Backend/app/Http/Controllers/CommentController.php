@@ -40,6 +40,22 @@ class CommentController extends Controller
             ], 404);
         }
     }
+    public function getCommentsByUserId($id)
+    {
+        $comments = $this->commentService->getCommentByUserId($id);
+
+        if ($comments) {
+            return response()->json([
+                'success' => true,
+                'comments' => $comments,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Comments not found.',
+            ], 404);
+        }
+    }
 
     public function store(Request $request)
     {
