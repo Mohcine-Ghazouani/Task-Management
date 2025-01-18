@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import UserApi from "../../services/Api/User/UserApi";
 import { UseUserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
 
 export default function Teams() {
   const { users, setUsers, teams, setTeams } = UseUserContext();
   const [editingTeamId, setEditingTeamId] = useState(null);
   const [editedTeamName, setEditedTeamName] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     UserApi.getTeams()
@@ -37,6 +39,7 @@ export default function Teams() {
   };
 
   const handleSave = (teamId) => {
+    setLoading(true);
     UserApi.updateTeam(teamId, { name: editedTeamName })
       .then(({ data }) => {
         console.log(data);
@@ -45,6 +48,7 @@ export default function Teams() {
             team.id === teamId ? { ...team, name: data.name } : team
           )
         );
+        setLoading(false);
         setEditingTeamId(null);
       })
       .catch((error) => {
@@ -84,14 +88,14 @@ console.log(editingTeamId);
             ) : (
               <h3 className="text-lg font-semibold text-gray-700">{team.name}</h3>
             )}
-            <div>
+            <div className="flex justify-end mt-4">
               {editingTeamId === team.id ? (
                 <>
                   <button
                     onClick={() => handleSave(team.id)}
-                    className="px-4 py-2 mr-2 text-sm font-semibold text-white bg-green-500 rounded hover:bg-green-600"
+                    className="flex items-center px-4 py-2 mr-2 text-sm font-semibold text-white bg-green-500 rounded hover:bg-green-600"
                   >
-                    Save
+                    Save {loading && <Loader className="ml-2 animate-spin" />}
                   </button>
                   <button
                     onClick={handleDiscard}

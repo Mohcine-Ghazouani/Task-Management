@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { UseUserContext } from "../../context/UserContext";
 
 import { useNavigate } from "react-router-dom";
@@ -138,7 +138,7 @@ export default function MemberLogin() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Login {isSubmitting && <Loader2 className="ml-2 animate-spin" />}
+              Login {isSubmitting && <Loader className="ml-2 animate-spin" />}
             </button>
           </div>
         </form>

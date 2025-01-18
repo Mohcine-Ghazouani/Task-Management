@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { UseUserContext } from "../../context/UserContext";
+import { Loader } from "lucide-react";
 
 import UserApi from "../../services/Api/User/UserApi";
 
@@ -10,6 +11,7 @@ export default function Dashboard() {
   const [editedTask, setEditedTask] = useState({});
   const [addingCommentId, setAddingCommentId] = useState(null);
   const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user.role === "Member") {
@@ -23,21 +25,24 @@ export default function Dashboard() {
   }, [user, setUserTask, userTask]);
 
   const handleEdit = (task) => {
+
     setEditingTaskId(task.id);
     setEditedTask({ ...task });
   };
 
   const handleUpdate = () => {
+    setLoading(true);
     UserApi.updateTask(editingTaskId, editedTask)
       .then(({ data }) => {
-        console.log("Task updated:", data);
-        console.log("prev task :", userTask);
+        
         setUserTask((prevTasks) =>
           prevTasks.map((task) =>
             task.id === editingTaskId ? data.task : task
           )
         );
+        setLoading(false);
         setEditingTaskId(null);
+
       })
       .catch((error) => {
         console.error("Error updating task:", error);
@@ -55,11 +60,13 @@ export default function Dashboard() {
   };
 
     const handleSaveComment = () => {
+    setLoading(true);
     UserApi.createComment({ content: newComment , user_id: user.id , task_id: addingCommentId})
       .then(({ data }) => {
         setComments((prevComments) => [...prevComments, data.comment]);
         setAddingCommentId(null);
         setNewComment("");
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error adding comment:", error);
@@ -176,6 +183,7 @@ export default function Dashboard() {
                     {addingCommentId === task.id ? (
                       <>
                         <input
+                          required
                           type="text"
                           value={newComment}
                           onChange={(e) => setNewComment(e.target.value)}
@@ -198,16 +206,18 @@ export default function Dashboard() {
                     )}
                   </td>
                 </tr>
-
-                <tr>
-                  <td colSpan="2" className="pt-4 text-center">
+                </tbody>
+                </table>
+                {/* <tr>
+                  <td colSpan="2" className="pt-4 text-center"> */}
+                  <div className="flex justify-center mt-4">
                     {editingTaskId === task.id ? (
                       <>
                         <button
                           onClick={handleUpdate}
-                          className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+                          className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
                         >
-                          Save
+                          Save {loading && <Loader className="ml-2 animate-spin" />}
                         </button>
                         <button
                           onClick={handleDiscard}
@@ -220,9 +230,9 @@ export default function Dashboard() {
                       <>
                         <button
                           onClick={handleSaveComment}
-                          className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+                          className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
                         >
-                          Save Comment
+                          Save Comment {loading && <Loader className="ml-2 animate-spin" />}
                         </button>
                         <button
                           onClick={handleDiscardComment}
@@ -247,10 +257,11 @@ export default function Dashboard() {
                         </button>
                       </>
                     )}
-                  </td>
+                  {/* </td>
                 </tr>
               </tbody>
-            </table>
+            </table> */}
+            </div>
           </div>
         ))}
       </div>

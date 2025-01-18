@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 
 import { axiosClient } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
@@ -126,7 +126,7 @@ export default function Register() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Register {isSubmitting && <Loader2 className="ml-2 animate-spin" />}
+              Register {isSubmitting && <Loader className="ml-2 animate-spin" />}
             </button>
           </div>
         </form>

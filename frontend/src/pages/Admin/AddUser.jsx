@@ -3,8 +3,10 @@ import { UseUserContext } from "../../context/UserContext";
 import UserApi from "../../services/Api/User/UserApi";
 import { useNavigate } from "react-router-dom";
 import { axiosClient } from "../../api/axios";
+import { Loader } from "lucide-react";
 
 export default function AddUser() {
+  const [loading, setLoading] = useState(false);
   const { setUsers, teams, setTeams } = UseUserContext();
   const [newUser, setNewUser] = useState({
     name: "",
@@ -27,11 +29,13 @@ export default function AddUser() {
   };
 
   const handleSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
     UserApi.createUser(newUser)
       .then(({ data }) => {
         setUsers((prevUsers) => [...prevUsers, data.user]);
-        navigate("/users");
+        setLoading(false);
+        navigate("/AdminDashboard");
       })
       .catch((error) => {
         console.error("Error adding user:", error);
@@ -41,16 +45,6 @@ export default function AddUser() {
   console.log(teams);
   return (
     <div className="container mx-auto my-8">
-      {/* <h1 className="text-2xl font-bold text-center mb-6"></h1> */}
-      {/* <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Add New User</h2>
-        <button
-          onClick={() => navigate("/AdminDashboard")}
-          className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
-        >
-          Back
-        </button>
-      </div> */}
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       <form
         onSubmit={handleSubmit}
@@ -129,9 +123,9 @@ export default function AddUser() {
         <div className="text-center">
           <button
             type="submit"
-            className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            className="flex justify-center px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
           >
-            Add User
+            Add User {loading && <Loader className="ml-2 animate-spin" />}
           </button>
         </div>
       </form>

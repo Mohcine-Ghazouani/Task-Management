@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { UseUserContext } from "../../context/UserContext";
 import UserApi from "../../services/Api/User/UserApi";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
 
 export default function Users() {
   const { users, setUsers } = UseUserContext();
@@ -10,6 +11,7 @@ export default function Users() {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     UserApi.getUsers().then(({ data }) => {
@@ -40,12 +42,16 @@ export default function Users() {
   };
 
   const handleUpdate = (userId) => {
+    setLoading(true);
     UserApi.updateUser(userId, { team_id: selectedTeam, role: selectedRole })
       .then(({ data }) => {
         setUsers((prevUsers) =>
           prevUsers.map((user) => (user.id === userId ? data.user : user))
         );
         setEditingUserId(null);
+        setSelectedTeam(null);
+        setSelectedRole("");
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error updating user:", error);
@@ -134,45 +140,43 @@ export default function Users() {
                   )}
                 </td>
               </tr>
-              <tr>
-                <td colSpan="2" className="pt-4 text-center">
-                  {editingUserId === user.id ? (
-                    <>
-                      <button
-                        onClick={() => handleUpdate(user.id)}
-                        className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={handleDiscard}
-                        className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
-                      >
-                        Discard
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() =>
-                          handleEdit(user.id, user.team?.id || null, user.role)
-                        }
-                        className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(user.id)}
-                        className="px-4 py-2 text-xs font-semibold text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none"
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
             </tbody>
           </table>
+          <div className="flex justify-center mt-4">
+            {editingUserId === user.id ? (
+              <>
+                <button
+                  onClick={() => handleUpdate(user.id)}
+                  className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+                >
+                  Save {loading && <Loader className="ml-2 animate-spin" />}
+                </button>
+                <button
+                  onClick={handleDiscard}
+                  className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
+                >
+                  Discard
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() =>
+                    handleEdit(user.id, user.team?.id || null, user.role)
+                  }
+                  className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(user.id)}
+                  className="px-4 py-2 text-xs font-semibold text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none"
+                >
+                  Delete
+                </button>
+              </>
+            )}
+          </div>
         </div>
       ))}
     </div>
