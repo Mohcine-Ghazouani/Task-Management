@@ -4,7 +4,7 @@ import UserApi from "../services/Api/User/UserApi";
 import { Loader } from "lucide-react";
 
 export default function Profile() {
-  const { user, setUser } = UseUserContext(); // Assuming `setUser` is available in the context
+  const { user, setUser } = UseUserContext(); 
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editedUser, setEditedUser] = useState({
@@ -14,7 +14,7 @@ export default function Profile() {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
-    setEditedUser({ name: user.name, email: user.email }); // Reset to original values
+    setEditedUser({ name: user.name, email: user.email }); 
   };
 
   const handleSave = () => {
@@ -24,20 +24,19 @@ export default function Profile() {
       setIsEditing(false);
       setLoading(false);
     });
- 
   };
 
   return (
     <>
-      <div className="container border p-2 mt-4 rounded-lg bg-white shadow">
-        <table className="table-auto w-full">
+      <div className="container p-2 mt-4 bg-white border rounded-lg shadow">
+        <table className="w-full table-auto">
           <tbody>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">Role:</th>
+              <th className="p-3 font-medium text-left text-gray-700">Role:</th>
               <td className="p-3 text-gray-600">{user.role}</td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">Name:</th>
+              <th className="p-3 font-medium text-left text-gray-700">Name:</th>
               <td className="p-3 text-gray-600">
                 {isEditing ? (
                   <input
@@ -46,7 +45,7 @@ export default function Profile() {
                     onChange={(e) =>
                       setEditedUser({ ...editedUser, name: e.target.value })
                     }
-                    className="border p-2 w-full rounded"
+                    className="w-full p-2 border rounded"
                   />
                 ) : (
                   user.name
@@ -54,7 +53,7 @@ export default function Profile() {
               </td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">
+              <th className="p-3 font-medium text-left text-gray-700">
                 Email:
               </th>
               <td className="p-3 text-gray-600">
@@ -65,7 +64,7 @@ export default function Profile() {
                     onChange={(e) =>
                       setEditedUser({ ...editedUser, email: e.target.value })
                     }
-                    className="border p-2 w-full rounded"
+                    className="w-full p-2 border rounded"
                   />
                 ) : (
                   user.email
@@ -73,7 +72,7 @@ export default function Profile() {
               </td>
             </tr>
             <tr>
-              <th className="text-left p-3 font-medium text-gray-700">Team:</th>
+              <th className="p-3 font-medium text-left text-gray-700">Team:</th>
               <td className="p-3 text-gray-600">
                 {user.team ? (
                   user.team
@@ -89,7 +88,7 @@ export default function Profile() {
             <>
               <button
                 onClick={handleSave}
-                className="flex items-center px-4 py-2 mr-2 text-center text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+                className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-center text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
               >
                 Save {loading && <Loader className="ml-2 animate-spin" />}
               </button>
@@ -113,10 +112,3 @@ export default function Profile() {
     </>
   );
 }
-
-
-
-
-
-
-

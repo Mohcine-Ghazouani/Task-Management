@@ -66,9 +66,9 @@ export default function MemberLogin() {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center  py-12 sm:px-6 lg:px-8">
+    <div className="flex flex-col justify-center flex-1 min-h-full py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+        <h2 className="mt-10 font-bold tracking-tight text-center text-gray-900 text-2xl/9">
           Sign in to your account
         </h2>
       </div>
@@ -78,7 +78,7 @@ export default function MemberLogin() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm/6 font-medium text-gray-900"
+              className="block font-medium text-gray-900 text-sm/6"
             >
               Email address
             </label>
@@ -103,7 +103,7 @@ export default function MemberLogin() {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="block text-sm/6 font-medium text-gray-900"
+                className="block font-medium text-gray-900 text-sm/6"
               >
                 Password
               </label>
@@ -143,7 +143,7 @@ export default function MemberLogin() {
           </div>
         </form>
 
-        <p className="mt-10 text-center text-sm/6 text-gray-500">
+        <p className="mt-10 text-center text-gray-500 text-sm/6">
           Not a member?{" "}
           <a
             href="/register"

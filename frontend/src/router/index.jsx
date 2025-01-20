@@ -20,7 +20,6 @@ import Dashboard from "../pages/Member/Dashboard";
 import Profile from "../pages/Profile";
 import NotFound from "../pages/NotFound";
 
-
 //import ProtectedRoute from "./ProtectedRoute";
 
 export const REGISTER_ROUTE = "/register";
@@ -38,7 +37,6 @@ export const router = createBrowserRouter([
         path: "*",
         element: <NotFound />,
       },
-     
     ],
   },
   {
@@ -57,7 +55,7 @@ export const router = createBrowserRouter([
   {
     element: (
       //<ProtectedRoute allowedRoles={["Member"]}>
-        <UserDashbordLayout />
+      <UserDashbordLayout />
       //</ProtectedRoute>
     ),
     children: [
@@ -74,7 +72,7 @@ export const router = createBrowserRouter([
   {
     element: (
       //<ProtectedRoute allowedRoles={["Admin"]}>
-        <AdminDashbordLayout />
+      <AdminDashbordLayout />
       //</ProtectedRoute>
     ),
     children: [
@@ -105,11 +103,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ADMIN_PROFILE_ROUTE,
-        element: (
-          
-          <Profile />
-   
-        ),
+        element: <Profile />,
       },
     ],
   },

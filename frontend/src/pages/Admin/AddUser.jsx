@@ -22,7 +22,7 @@ export default function AddUser() {
     axiosClient.get("/teams").then(({ data }) => {
       setTeams(data.teams);
     });
-  }, []);
+  }, [setTeams]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewUser({ ...newUser, [name]: value });
@@ -45,13 +45,13 @@ export default function AddUser() {
   console.log(teams);
   return (
     <div className="container mx-auto my-8">
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      {error && <p className="mb-4 text-center text-red-500">{error}</p>}
       <form
         onSubmit={handleSubmit}
-        className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 space-y-4"
+        className="max-w-lg p-6 mx-auto space-y-4 bg-white rounded-lg shadow-md"
       >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
             Add New User
           </h2>
           <button
@@ -70,7 +70,7 @@ export default function AddUser() {
             name="name"
             value={newUser.name}
             onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -83,7 +83,7 @@ export default function AddUser() {
             name="email"
             value={newUser.email}
             onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -95,7 +95,7 @@ export default function AddUser() {
             name="role"
             value={newUser.role}
             onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           >
             <option value="Admin">Admin</option>
@@ -110,7 +110,7 @@ export default function AddUser() {
             name="team_id"
             value={newUser.team_id}
             onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">No team</option>
             {teams.map((team) => (

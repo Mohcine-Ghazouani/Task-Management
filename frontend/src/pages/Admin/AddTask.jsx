@@ -20,7 +20,7 @@ export default function AddTask() {
 
   const handleSubmit = (e) => {
     setLoading(true);
-    
+
     e.preventDefault();
 
     UserApi.createTask(newTask)
@@ -41,8 +41,7 @@ export default function AddTask() {
 
   return (
     <div className="container my-4 space-y-4 ">
-      {/* <h2 className="text-2xl font-bold text-center mb-6">Add New Task</h2> */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-800">Add New Task</h2>
         <button
           onClick={() => navigate("/tasks")}
@@ -51,17 +50,17 @@ export default function AddTask() {
           Back
         </button>
       </div>
-      <div className="border p-4 rounded-lg bg-white shadow">
-        <table className="table-auto w-full">
+      <div className="p-4 bg-white border rounded-lg shadow">
+        <table className="w-full table-auto">
           <tbody>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700 w-1/3">
+              <th className="w-1/3 p-3 font-medium text-left text-gray-700">
                 Title:
               </th>
               <td className="text-gray-600">
                 <input
                   type="text"
-                  className="border p-2 w-full rounded"
+                  className="w-full p-2 border rounded"
                   name="title"
                   value={newTask.title}
                   onChange={handleChange}
@@ -70,12 +69,12 @@ export default function AddTask() {
               </td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">
+              <th className="p-3 font-medium text-left text-gray-700">
                 Description:
               </th>
               <td className="text-gray-600">
                 <textarea
-                  className="border p-2 w-full rounded"
+                  className="w-full p-2 border rounded"
                   name="description"
                   value={newTask.description}
                   onChange={handleChange}
@@ -84,12 +83,12 @@ export default function AddTask() {
               </td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">
+              <th className="p-3 font-medium text-left text-gray-700">
                 Status:
               </th>
               <td className="text-gray-600">
                 <select
-                  className="border p-2 w-full rounded"
+                  className="w-full p-2 border rounded"
                   name="status"
                   value={newTask.status}
                   onChange={handleChange}
@@ -101,12 +100,12 @@ export default function AddTask() {
               </td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">
+              <th className="p-3 font-medium text-left text-gray-700">
                 Priority:
               </th>
               <td className="text-gray-600">
                 <select
-                  className="border p-2 w-full rounded"
+                  className="w-full p-2 border rounded"
                   name="priority"
                   value={newTask.priority}
                   onChange={handleChange}
@@ -118,13 +117,13 @@ export default function AddTask() {
               </td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">
+              <th className="p-3 font-medium text-left text-gray-700">
                 Due Date:
               </th>
               <td className="text-gray-600">
                 <input
                   type="date"
-                  className="border p-2 w-full rounded"
+                  className="w-full p-2 border rounded"
                   name="due_date"
                   value={newTask.due_date}
                   onChange={handleChange}
@@ -132,12 +131,12 @@ export default function AddTask() {
               </td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">
+              <th className="p-3 font-medium text-left text-gray-700">
                 Assigned To:
               </th>
               <td className="text-gray-600">
                 <select
-                  className="border p-2 w-full rounded"
+                  className="w-full p-2 border rounded"
                   name="user_id"
                   value={newTask.user_id}
                   onChange={handleChange}
@@ -162,8 +161,6 @@ export default function AddTask() {
           </button>
         </div>
       </div>
-
-
     </div>
   );
 }

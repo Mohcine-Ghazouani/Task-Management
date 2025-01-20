@@ -25,19 +25,16 @@ export default function Register() {
 
   const onSubmit = async (values) => {
     try {
-    
       await axiosClient.get("/sanctum/csrf-cookie", {
         baseURL: import.meta.env.VITE_BACKEND_URL,
       });
 
-    
       await axiosClient.post("/register", values);
       navigate("/dashboard");
     } catch (error) {
       if (error.response?.data?.errors) {
         const serverErrors = error.response.data.errors;
 
-  
         Object.keys(serverErrors).forEach((field) => {
           setError(field, { message: serverErrors[field][0] });
         });
@@ -46,9 +43,9 @@ export default function Register() {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center  py-12 ">
+    <div className="flex flex-col justify-center flex-1 min-h-full py-12 ">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className=" text-center text-xl font-bold tracking-tight text-gray-900">
+        <h2 className="text-xl font-bold tracking-tight text-center text-gray-900 ">
           Create an Account
         </h2>
       </div>
@@ -56,7 +53,10 @@ export default function Register() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-900">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-900"
+            >
               Name
             </label>
             <div className="mt-2">
@@ -66,13 +66,18 @@ export default function Register() {
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
               />
               {errors.name && (
-                <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.name.message}
+                </p>
               )}
             </div>
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-900">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-900"
+            >
               Email address
             </label>
             <div className="mt-2">
@@ -82,13 +87,18 @@ export default function Register() {
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
               )}
             </div>
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-900">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-900"
+            >
               Password
             </label>
             <div className="mt-2">
@@ -99,13 +109,18 @@ export default function Register() {
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
               )}
             </div>
           </div>
 
           <div>
-            <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-900">
+            <label
+              htmlFor="password_confirmation"
+              className="block text-sm font-medium text-gray-900"
+            >
               Confirm Password
             </label>
             <div className="mt-2">
@@ -116,7 +131,9 @@ export default function Register() {
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
               />
               {errors.password_confirmation && (
-                <p className="mt-1 text-sm text-red-600">{errors.password_confirmation.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password_confirmation.message}
+                </p>
               )}
             </div>
           </div>
@@ -126,14 +143,18 @@ export default function Register() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Register {isSubmitting && <Loader className="ml-2 animate-spin" />}
+              Register{" "}
+              {isSubmitting && <Loader className="ml-2 animate-spin" />}
             </button>
           </div>
         </form>
 
-        <p className="mt-10 text-center text-sm text-gray-500">
+        <p className="mt-10 text-sm text-center text-gray-500">
           Already have an account?{" "}
-          <a href="/" className="font-semibold text-indigo-600 hover:text-indigo-500">
+          <a
+            href="/"
+            className="font-semibold text-indigo-600 hover:text-indigo-500"
+          >
             Login
           </a>
         </p>

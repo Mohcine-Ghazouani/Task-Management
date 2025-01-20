@@ -28,9 +28,9 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     <>
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        className="fixed z-50 p-2 transition-colors bg-gray-100 rounded-md top-4 left-4 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
       >
-        <AlignJustify className="h-6 w-6" />
+        <AlignJustify className="w-6 h-6" />
       </button>
       <div
         className={`fixed top-0 left-0 h-full bg-white shadow-md z-40 transition-all duration-300 ease-in-out ${
@@ -43,22 +43,22 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
             : "w-16"
         }`}
       >
-        <div className="flex items-center justify-between h-16 bg-gray-100 border-b border-gray-300 px-4">
+        <div className="flex items-center justify-between h-16 px-4 bg-gray-100 border-b border-gray-300">
           
         </div>
         <div className="p-3">
           <Link
             to="/Dashboard"
-            className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
+            className="flex items-center p-2 mb-2 text-gray-600 transition duration-200 rounded-lg hover:bg-gray-600 hover:text-white"
           >
-            <House className="h-6 w-6" />
+            <House className="w-6 h-6" />
             {sidebarOpen && <span className="ml-4">Dashboard</span>}
           </Link>
           {/* <Link
             to="/add-task"
-            className="flex items-center p-2 mb-2 rounded-lg text-gray-600 hover:bg-gray-600 hover:text-white transition duration-200"
+            className="flex items-center p-2 mb-2 text-gray-600 transition duration-200 rounded-lg hover:bg-gray-600 hover:text-white"
           >
-            <Users className="h-6 w-6" />
+            <Users className="w-6 h-6" />
             {sidebarOpen && <span className="ml-4">Add</span>}
           </Link> */}
           
@@ -66,7 +66,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
       </div>
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-300 ease-in-out"
+          className="fixed inset-0 z-30 transition-opacity duration-300 ease-in-out bg-black bg-opacity-50"
           onClick={() => setSidebarOpen(false)}
         />
       )}

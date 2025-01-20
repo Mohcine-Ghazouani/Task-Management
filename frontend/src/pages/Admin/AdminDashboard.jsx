@@ -21,7 +21,7 @@ export default function Users() {
     UserApi.getTeams().then(({ data }) => {
       setTeams(data.teams);
     });
-  }, [users]);
+  }, [users, setUsers]);
 
   const handleDelete = (id) => {
     if (confirm("Are you sure you want to delete this user?")) {
@@ -66,7 +66,7 @@ export default function Users() {
 
   return (
     <div className="container my-4 space-y-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-800">Users List</h2>
         <button
           onClick={() => navigate("/add-user")}
@@ -76,29 +76,29 @@ export default function Users() {
         </button>
       </div>
       {users.map((user) => (
-        <div key={user.id} className="border p-4 rounded-lg bg-white shadow">
-          <table className="table-auto w-full">
+        <div key={user.id} className="p-4 bg-white border rounded-lg shadow">
+          <table className="w-full table-auto">
             <tbody>
               <tr className="border-b">
-                <th className="text-left p-3 font-medium text-gray-700 w-1/3">
+                <th className="w-1/3 p-3 font-medium text-left text-gray-700">
                   Name:
                 </th>
                 <td className="text-gray-600">{user.name}</td>
               </tr>
               <tr className="border-b">
-                <th className="text-left p-3 font-medium text-gray-700">
+                <th className="p-3 font-medium text-left text-gray-700">
                   Email:
                 </th>
                 <td className="text-gray-600">{user.email}</td>
               </tr>
               <tr className="border-b">
-                <th className="text-left p-3 font-medium text-gray-700">
+                <th className="p-3 font-medium text-left text-gray-700">
                   Role:
                 </th>
                 <td className="text-gray-600">
                   {editingUserId === user.id ? (
                     <select
-                      className="border p-2 rounded"
+                      className="p-2 border rounded"
                       value={selectedRole || ""}
                       onChange={(e) => setSelectedRole(e.target.value)}
                     >
@@ -114,13 +114,13 @@ export default function Users() {
                 </td>
               </tr>
               <tr className="border-b">
-                <th className="text-left p-3 font-medium text-gray-700">
+                <th className="p-3 font-medium text-left text-gray-700">
                   Team:
                 </th>
                 <td className="text-gray-600">
                   {editingUserId === user.id ? (
                     <select
-                      className="border p-2 rounded"
+                      className="p-2 border rounded"
                       value={selectedTeam || ""}
                       onChange={(e) => setSelectedTeam(e.target.value)}
                     >
