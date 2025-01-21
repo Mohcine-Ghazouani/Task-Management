@@ -3,22 +3,22 @@ import { useContext } from "react";
 import UserApi from "../services/Api/User/UserApi";
 
 const UserStateContext = createContext({
-  task: {},
-  tasks: [],
+  task : {},
+  tasks : [],
 
-  setTask: () => {},
-  setTasks: () => {},
+  setTask : () => {},
+  setTasks : () => {},
   user: {},
   setUser: () => {},
   Notification: {},
   setNotification: () => {},
-
+ 
   users: [],
   authenticated: false,
   setAuthenticated: () => {},
   login: (email, password) => {},
   logout: () => {},
-
+  
   updateUser: (id, userData) => {},
 });
 export default function UserContext({ children }) {
@@ -38,6 +38,7 @@ export default function UserContext({ children }) {
     return UserApi.login(email, password);
   };
   const logout = () => {
+    
     setUser({});
     setAuthenticated(false);
   };
@@ -46,6 +47,9 @@ export default function UserContext({ children }) {
     _setAuthenticated(isAuthenticated);
     window.localStorage.setItem("AUTHENTICATED", isAuthenticated);
   };
+
+ 
+
 
   // const updateUser = async (id, userData) => {
   //   try {

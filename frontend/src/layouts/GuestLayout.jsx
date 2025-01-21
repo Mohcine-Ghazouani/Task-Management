@@ -1,4 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 import { DASHBOARD_ROUTE } from "../router/index";
 import { useEffect, useState } from "react";
 import { UseUserContext } from "../context/UserContext";
@@ -13,7 +15,7 @@ export default function GuestLayout() {
     if (context.authenticated) {
       navigate(DASHBOARD_ROUTE);
     }
-  }, [context.authenticated, navigate]);
+  }, []);
   return (
     <>
       <main
@@ -24,6 +26,7 @@ export default function GuestLayout() {
       >
         <Outlet />
       </main>
+      {/* <footer>footer</footer> */}
     </>
   );
 }

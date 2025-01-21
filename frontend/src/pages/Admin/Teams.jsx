@@ -27,7 +27,7 @@ export default function Teams() {
       .catch((error) => {
         console.error("Error fetching users:", error);
       });
-  }, [setTeams, setUsers]);
+  }, []);
 
   const getUsersInTeam = (teamId) => {
     return users.filter((user) => user.team_id === teamId);
@@ -60,12 +60,12 @@ export default function Teams() {
     setEditingTeamId(null);
     setEditedTeamName("");
   };
-  console.log(teams);
-  console.log(editedTeamName);
-  console.log(editingTeamId);
+console.log(teams);
+console.log(editedTeamName);
+console.log(editingTeamId);
   return (
     <div className="container my-4 space-y-4">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-gray-800">Teams List</h2>
         <button
           onClick={() => navigate("/add-team")}
@@ -76,19 +76,17 @@ export default function Teams() {
       </div>
 
       {teams.map((team) => (
-        <div key={team.id} className="p-4 bg-white border rounded-lg shadow">
-          <div className="flex items-center justify-between">
+        <div key={team.id} className="border p-4 rounded-lg bg-white shadow">
+          <div className="flex justify-between items-center">
             {editingTeamId === team.id ? (
               <input
                 type="text"
                 value={editedTeamName}
                 onChange={(e) => setEditedTeamName(e.target.value)}
-                className="w-1/2 p-2 border rounded"
+                className="border p-2 rounded w-1/2"
               />
             ) : (
-              <h3 className="text-lg font-semibold text-gray-700">
-                {team.name}
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-700">{team.name}</h3>
             )}
             <div className="flex justify-end mt-4">
               {editingTeamId === team.id ? (
@@ -118,7 +116,7 @@ export default function Teams() {
           </div>
           <div className="mt-4">
             <h4 className="font-medium text-gray-700">Members:</h4>
-            <ul className="pl-6 list-disc">
+            <ul className="list-disc pl-6">
               {getUsersInTeam(team.id).length > 0 ? (
                 getUsersInTeam(team.id).map((user) => (
                   <li key={user.id} className="text-gray-600">

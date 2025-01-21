@@ -39,7 +39,7 @@ export default function UserDashbordLayout() {
     } else {
       navigate(LOGIN_ROUTE);
     }
-  }, [authenticated , navigate, setUser, setAuthenticated, logout]);
+  }, [authenticated]);
 
   const teamId = user.team_id;
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function UserDashbordLayout() {
         setUser((team) => ({ ...team, team: data.team.name }));
       });
     }
-  }, [teamId, setUser]);
+  }, [teamId]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -66,10 +66,11 @@ export default function UserDashbordLayout() {
         ${!sidebarOpen && !isMobile ? "mx-20" : ""}
         ${isMobile ? "mx-4" : ""}`}
       >
+        <h1 className="text-2xl font-bold text-center"> {user.name}</h1>
         <Outlet />
       </main>
       <footer
-        className={`bg-gray-600 text-white p-4 mt-8
+        className={`bg-gray-600 text-white p-4 mt-8 
                 ${sidebarOpen && !isMobile ? "ml-48" : ""}
               ${!sidebarOpen && !isMobile ? "ml-16" : ""}
               ${isMobile ? "" : ""}`}

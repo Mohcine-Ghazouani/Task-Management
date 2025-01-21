@@ -14,6 +14,7 @@ export default function Navbar() {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
+
   useEffect(() => {
     UserApi.getUserNotifications().then(({ data }) => {
       setNotifications(data.notifications);
@@ -33,19 +34,19 @@ export default function Navbar() {
   };
   return (
     <>
-      <nav className="fixed top-0 left-0 z-0 w-full bg-gray-100 shadow">
-        <div className="flex items-center h-16 mx-auto max-w-7xl">
+      <nav className="bg-gray-100 shadow fixed w-full z-0 top-0 left-0">
+        <div className="max-w-7xl mx-auto  flex items-center h-16">
           <div className="flex justify-between w-full">
             <div className="flex items-start"></div>
             <div className="flex items-center">
               <Menu as="div" className="relative ">
                 <div>
-                  <MenuButton className="p-2 text-gray-600 transition duration-200 hover:text-gray-800">
+                  <MenuButton className="p-2 text-gray-600 hover:text-gray-800 transition duration-200">
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">Open user menu</span>
-                    <Bell className="rounded-full " />
+                    <Bell className=" rounded-full" />
                     {unreadCount > 0 && (
-                      <span className="absolute flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full -top-2 -right-2">
+                      <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full">
                         {unreadCount}
                       </span>
                     )}
@@ -88,10 +89,10 @@ export default function Navbar() {
 
               <Menu as="div" className="relative ml-3">
                 <div>
-                  <MenuButton className="p-2 text-gray-600 transition duration-200 hover:text-gray-800">
+                  <MenuButton className="p-2 text-gray-600 hover:text-gray-800 transition duration-200">
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">Open user menu</span>
-                    <CircleUser className="w-8 h-8 rounded-full" />
+                    <CircleUser className="h-8 w-8 rounded-full" />
                   </MenuButton>
                 </div>
                 <MenuItems

@@ -2,7 +2,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import AdminNavbar from "../../components/AdminNavbar";
 import AdminSidebar from "../../components/AdminSidebar";
 import AdminFooter from "../../components/AdminFooter";
-
 import { LOGIN_ROUTE } from "../../router/index";
 import { useEffect, useState } from "react";
 import { axiosClient } from "../../api/axios";
@@ -37,7 +36,7 @@ export default function AdminDashbordLayout() {
     } else {
       navigate(LOGIN_ROUTE);
     }
-  }, [authenticated, navigate,logout, setUser, setAuthenticated]);
+  }, [authenticated]);
 
   const teamId = user.team_id;
   useEffect(() => {
@@ -46,7 +45,7 @@ export default function AdminDashbordLayout() {
         setUser((team) => ({ ...team, team: data.team.name }));
       });
     }
-  }, [teamId, setUser]);
+  }, [teamId]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -64,7 +63,9 @@ export default function AdminDashbordLayout() {
         ${!sidebarOpen && !isMobile ? "mx-20" : ""}
         ${isMobile ? "mx-4" : ""}`}
       >
-        <h1 className="text-2xl font-bold text-center">{user.role}</h1>
+        <h1 className="text-2xl font-bold text-center">
+          {user.role} 
+        </h1>
         <Outlet />
       </main>
       <footer

@@ -22,9 +22,10 @@ export default function Dashboard() {
         setComments(data.comments);
       });
     }
-  }, [user, userTask, setUserTask, comments, setComments]);
+  }, [user, setUserTask, userTask]);
 
   const handleEdit = (task) => {
+
     setEditingTaskId(task.id);
     setEditedTask({ ...task });
   };
@@ -33,6 +34,7 @@ export default function Dashboard() {
     setLoading(true);
     UserApi.updateTask(editingTaskId, editedTask)
       .then(({ data }) => {
+        
         setUserTask((prevTasks) =>
           prevTasks.map((task) =>
             task.id === editingTaskId ? data.task : task
@@ -40,6 +42,7 @@ export default function Dashboard() {
         );
         setLoading(false);
         setEditingTaskId(null);
+
       })
       .catch((error) => {
         console.error("Error updating task:", error);
@@ -56,13 +59,9 @@ export default function Dashboard() {
     setNewComment("");
   };
 
-  const handleSaveComment = () => {
+    const handleSaveComment = () => {
     setLoading(true);
-    UserApi.createComment({
-      content: newComment,
-      user_id: user.id,
-      task_id: addingCommentId,
-    })
+    UserApi.createComment({ content: newComment , user_id: user.id , task_id: addingCommentId})
       .then(({ data }) => {
         setComments((prevComments) => [...prevComments, data.comment]);
         setAddingCommentId(null);
@@ -79,15 +78,13 @@ export default function Dashboard() {
     setNewComment("");
   };
 
+
+
   return (
     <>
-      <div>
-        <h1 className="text-2xl font-bold text-center"> {user.name}</h1>
+      <div className="container my-4 space-y-4">
         {userTask.map((task) => (
-          <div
-            key={task.id}
-            className="p-4 mt-4 bg-white border rounded-lg shadow"
-          >
+          <div key={task.id} className="p-4 bg-white border rounded-lg shadow">
             <table className="w-full table-auto">
               <tbody>
                 <tr className="border-b">
@@ -208,56 +205,61 @@ export default function Dashboard() {
                     )}
                   </td>
                 </tr>
+                </tbody>
+                </table>
+                {/* <tr>
+                  <td colSpan="2" className="pt-4 text-center"> */}
+                  <div className="flex justify-center mt-4">
+                    {editingTaskId === task.id ? (
+                      <>
+                        <button
+                          onClick={handleUpdate}
+                          className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+                        >
+                          Save {loading && <Loader className="ml-2 animate-spin" />}
+                        </button>
+                        <button
+                          onClick={handleDiscard}
+                          className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
+                        >
+                          Discard
+                        </button>
+                      </>
+                    ) : addingCommentId === task.id ? (
+                      <>
+                        <button
+                          onClick={handleSaveComment}
+                          className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+                        >
+                          Save Comment {loading && <Loader className="ml-2 animate-spin" />}
+                        </button>
+                        <button
+                          onClick={handleDiscardComment}
+                          className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
+                        >
+                          Discard
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleEdit(task)}
+                          className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleAddComment(task.id)}
+                          className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+                        >
+                          Add Comment
+                        </button>
+                      </>
+                    )}
+                  {/* </td>
+                </tr>
               </tbody>
-            </table>
-            <div className="flex justify-center mt-4">
-              {editingTaskId === task.id ? (
-                <>
-                  <button
-                    onClick={handleUpdate}
-                    className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
-                  >
-                    Save {loading && <Loader className="ml-2 animate-spin" />}
-                  </button>
-                  <button
-                    onClick={handleDiscard}
-                    className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
-                  >
-                    Discard
-                  </button>
-                </>
-              ) : addingCommentId === task.id ? (
-                <>
-                  <button
-                    onClick={handleSaveComment}
-                    className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
-                  >
-                    Save Comment{" "}
-                    {loading && <Loader className="ml-2 animate-spin" />}
-                  </button>
-                  <button
-                    onClick={handleDiscardComment}
-                    className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
-                  >
-                    Discard
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => handleEdit(task)}
-                    className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleAddComment(task.id)}
-                    className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
-                  >
-                    Add Comment
-                  </button>
-                </>
-              )}
+            </table> */}
             </div>
           </div>
         ))}
