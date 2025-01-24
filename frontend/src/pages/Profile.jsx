@@ -12,6 +12,12 @@ export default function Profile() {
     email: user.email,
   });
 
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
     setEditedUser({ name: user.name, email: user.email }); // Reset to original values
@@ -19,25 +25,58 @@ export default function Profile() {
 
   const handleSave = () => {
     setLoading(true);
-    UserApi.updateUser(user.id, editedUser).then(({ data }) => {
-      setUser(data.user);
-      setIsEditing(false);
-      setLoading(false);
-    });
- 
+    UserApi.updateUser(user.id, editedUser)
+      .then(({ data }) => {
+        setUser(data.user);
+        setIsEditing(false);
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error);
+        alert("Failed to update user.");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const handleChangePassword = () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      alert("New password and confirmation do not match.");
+      return;
+    }
+
+    setLoading(true);
+    UserApi.changePassword({
+      userId: user.id,
+      currentPassword: passwordData.currentPassword,
+      newPassword: passwordData.newPassword,
+    })
+      .then(() => {
+        alert("Password updated successfully.");
+        setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      })
+      .catch((error) => {
+        console.error("Error changing password:", error);
+        alert("Failed to change password.");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const handleCancelPasswordChange = () => {
+    setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setLoading(false);
   };
 
   return (
     <>
-      <div className="container border p-2 mt-4 rounded-lg bg-white shadow">
-        <table className="table-auto w-full">
+      <div className="container p-2 mt-4 bg-white border rounded-lg shadow">
+        <h1 className="text-2xl font-bold text-center text-gray-700">Profile</h1>
+        <table className="w-full table-auto">
           <tbody>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">Role:</th>
+              <th className="p-3 font-medium text-left text-gray-700">Role:</th>
               <td className="p-3 text-gray-600">{user.role}</td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">Name:</th>
+              <th className="p-3 font-medium text-left text-gray-700">Name:</th>
               <td className="p-3 text-gray-600">
                 {isEditing ? (
                   <input
@@ -46,7 +85,7 @@ export default function Profile() {
                     onChange={(e) =>
                       setEditedUser({ ...editedUser, name: e.target.value })
                     }
-                    className="border p-2 w-full rounded"
+                    className="w-full p-2 border rounded"
                   />
                 ) : (
                   user.name
@@ -54,9 +93,7 @@ export default function Profile() {
               </td>
             </tr>
             <tr className="border-b">
-              <th className="text-left p-3 font-medium text-gray-700">
-                Email:
-              </th>
+              <th className="p-3 font-medium text-left text-gray-700">Email:</th>
               <td className="p-3 text-gray-600">
                 {isEditing ? (
                   <input
@@ -65,7 +102,7 @@ export default function Profile() {
                     onChange={(e) =>
                       setEditedUser({ ...editedUser, email: e.target.value })
                     }
-                    className="border p-2 w-full rounded"
+                    className="w-full p-2 border rounded"
                   />
                 ) : (
                   user.email
@@ -73,13 +110,9 @@ export default function Profile() {
               </td>
             </tr>
             <tr>
-              <th className="text-left p-3 font-medium text-gray-700">Team:</th>
+              <th className="p-3 font-medium text-left text-gray-700">Team:</th>
               <td className="p-3 text-gray-600">
-                {user.team ? (
-                  user.team
-                ) : (
-                  <p className="text-red-500">No Team</p>
-                )}
+                {user.team ? user.team : <p className="text-red-500">No Team</p>}
               </td>
             </tr>
           </tbody>
@@ -89,7 +122,7 @@ export default function Profile() {
             <>
               <button
                 onClick={handleSave}
-                className="flex items-center px-4 py-2 mr-2 text-center text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+                className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-center text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
               >
                 Save {loading && <Loader className="ml-2 animate-spin" />}
               </button>
@@ -110,13 +143,77 @@ export default function Profile() {
           )}
         </div>
       </div>
+
+      <div className="container p-2 mt-4 bg-white border rounded-lg shadow">
+        <h1 className="text-2xl font-bold text-center text-gray-700">
+        Update Password
+        </h1>
+        <table className="w-full table-auto">
+          <tbody>
+            <tr className="border-b">
+              <th className="p-3 font-medium text-left text-gray-700">
+                Current Password:
+              </th>
+              <td className="p-3 text-gray-600">
+                <input
+                  type="password"
+                  value={passwordData.currentPassword}
+                  onChange={(e) =>
+                    setPasswordData({ ...passwordData, currentPassword: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </td>
+            </tr>
+            <tr className="border-b">
+              <th className="p-3 font-medium text-left text-gray-700">
+                New Password:
+              </th>
+              <td className="p-3 text-gray-600">
+                <input
+                  type="password"
+                  value={passwordData.newPassword}
+                  onChange={(e) =>
+                    setPasswordData({ ...passwordData, newPassword: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </td>
+            </tr>
+            <tr>
+              <th className="p-3 font-medium text-left text-gray-700">
+                Confirm Password:
+              </th>
+              <td className="p-3 text-gray-600">
+                <input
+                  type="password"
+                  value={passwordData.confirmPassword}
+                  onChange={(e) =>
+                    setPasswordData({ ...passwordData, confirmPassword: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={handleChangePassword}
+            className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-center text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+          >
+            Update {loading && <Loader className="ml-2 animate-spin" />}
+          </button>
+          <button
+            onClick={handleCancelPasswordChange}
+            className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
     </>
   );
 }
-
-
-
-
-
 
 

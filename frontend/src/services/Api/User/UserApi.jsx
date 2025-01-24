@@ -12,6 +12,9 @@ const UserApi = {
   logout: async () => {
     return await axiosClient.post('/logout')
   },
+  changePassword: async (password) => {
+    return await axiosClient.post('/reset-password', password)
+  },
   getUser: async () => {
     return await axiosClient.get('/user')
   },
