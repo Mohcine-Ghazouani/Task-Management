@@ -2,9 +2,10 @@ import { useState } from "react";
 import { UseUserContext } from "../context/UserContext";
 import UserApi from "../services/Api/User/UserApi";
 import { Loader } from "lucide-react";
+import { use } from "react";
 
 export default function Profile() {
-  const { user, setUser } = UseUserContext(); // Assuming `setUser` is available in the context
+  const { user, setUser } = UseUserContext();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editedUser, setEditedUser] = useState({
@@ -20,7 +21,7 @@ export default function Profile() {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
-    setEditedUser({ name: user.name, email: user.email }); // Reset to original values
+    setEditedUser({ name: user.name, email: user.email });
   };
 
   const handleSave = () => {
@@ -45,13 +46,17 @@ export default function Profile() {
 
     setLoading(true);
     UserApi.changePassword({
-      userId: user.id,
       currentPassword: passwordData.currentPassword,
       newPassword: passwordData.newPassword,
+      newPassword_confirmation: passwordData.confirmPassword,
     })
       .then(() => {
         alert("Password updated successfully.");
-        setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
       })
       .catch((error) => {
         console.error("Error changing password:", error);
@@ -61,14 +66,20 @@ export default function Profile() {
   };
 
   const handleCancelPasswordChange = () => {
-    setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setPasswordData({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
     setLoading(false);
   };
 
   return (
     <>
       <div className="container p-2 mt-4 bg-white border rounded-lg shadow">
-        <h1 className="text-2xl font-bold text-center text-gray-700">Profile</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-700">
+          Profile
+        </h1>
         <table className="w-full table-auto">
           <tbody>
             <tr className="border-b">
@@ -93,7 +104,9 @@ export default function Profile() {
               </td>
             </tr>
             <tr className="border-b">
-              <th className="p-3 font-medium text-left text-gray-700">Email:</th>
+              <th className="p-3 font-medium text-left text-gray-700">
+                Email:
+              </th>
               <td className="p-3 text-gray-600">
                 {isEditing ? (
                   <input
@@ -112,7 +125,11 @@ export default function Profile() {
             <tr>
               <th className="p-3 font-medium text-left text-gray-700">Team:</th>
               <td className="p-3 text-gray-600">
-                {user.team ? user.team : <p className="text-red-500">No Team</p>}
+                {user.team ? (
+                  user.team
+                ) : (
+                  <p className="text-red-500">No Team</p>
+                )}
               </td>
             </tr>
           </tbody>
@@ -146,7 +163,7 @@ export default function Profile() {
 
       <div className="container p-2 mt-4 bg-white border rounded-lg shadow">
         <h1 className="text-2xl font-bold text-center text-gray-700">
-        Update Password
+          Update Password
         </h1>
         <table className="w-full table-auto">
           <tbody>
@@ -159,7 +176,10 @@ export default function Profile() {
                   type="password"
                   value={passwordData.currentPassword}
                   onChange={(e) =>
-                    setPasswordData({ ...passwordData, currentPassword: e.target.value })
+                    setPasswordData({
+                      ...passwordData,
+                      currentPassword: e.target.value,
+                    })
                   }
                   className="w-full p-2 border rounded"
                 />
@@ -174,7 +194,10 @@ export default function Profile() {
                   type="password"
                   value={passwordData.newPassword}
                   onChange={(e) =>
-                    setPasswordData({ ...passwordData, newPassword: e.target.value })
+                    setPasswordData({
+                      ...passwordData,
+                      newPassword: e.target.value,
+                    })
                   }
                   className="w-full p-2 border rounded"
                 />
@@ -189,7 +212,10 @@ export default function Profile() {
                   type="password"
                   value={passwordData.confirmPassword}
                   onChange={(e) =>
-                    setPasswordData({ ...passwordData, confirmPassword: e.target.value })
+                    setPasswordData({
+                      ...passwordData,
+                      confirmPassword: e.target.value,
+                    })
                   }
                   className="w-full p-2 border rounded"
                 />
@@ -215,5 +241,3 @@ export default function Profile() {
     </>
   );
 }
-
-
