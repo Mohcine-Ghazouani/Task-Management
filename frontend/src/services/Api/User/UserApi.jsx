@@ -12,8 +12,15 @@ const UserApi = {
   logout: async () => {
     return axiosClient.post('/logout')
   },
-  changePassword: async (password) => {
-    return axiosClient.post('/reset-password', password)
+  // changePassword: async (password) => {
+  //   return axiosClient.post('/user/password', password)
+  // },
+  changePassword: (passwordData) => {
+    return axiosClient.post('/user/password', passwordData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Replace with your token logic
+      },
+    });
   },
   getUser: async () => {
     return axiosClient.get('/user')

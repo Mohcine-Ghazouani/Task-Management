@@ -7,6 +7,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PasswordController;
 use App\Models\User;
 
 
@@ -14,12 +15,16 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:sanctum')->post('/user/password', [PasswordController::class, 'updatePassword']);
+
+
 
 Route::get('/users', [UserController::class, 'index']); 
 Route::get('/users/{id}', [UserController::class, 'show']); 
 Route::post('/users', [UserController::class, 'store']); 
 Route::put('/users/{id}', [UserController::class, 'update']); 
 Route::delete('/users/{id}', [UserController::class, 'destroy']); 
+
 
 
 Route::get('/tasks', [TaskController::class, 'index']); 
