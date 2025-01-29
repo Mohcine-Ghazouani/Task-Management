@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { UseUserContext } from "../context/UserContext";
 import UserApi from "../services/Api/User/UserApi";
-import { Loader } from "lucide-react";
-import { use } from "react";
+import { Loader, EyeIcon, EyeOffIcon } from "lucide-react";
 
 export default function Profile() {
   const { user, setUser } = UseUserContext();
@@ -18,6 +17,7 @@ export default function Profile() {
     newPassword: "",
     confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -172,17 +172,30 @@ export default function Profile() {
                 Current Password:
               </th>
               <td className="p-3 text-gray-600">
-                <input
-                  type="password"
-                  value={passwordData.currentPassword}
-                  onChange={(e) =>
-                    setPasswordData({
-                      ...passwordData,
-                      currentPassword: e.target.value,
-                    })
-                  }
-                  className="w-full p-2 border rounded"
-                />
+                <div className="relative mt-2">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={passwordData.currentPassword}
+                    onChange={(e) =>
+                      setPasswordData({
+                        ...passwordData,
+                        currentPassword: e.target.value,
+                      })
+                    }
+                    className="w-full p-2 border rounded "
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 flex items-center px-2 text-gray-500 right-2"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon size={20} />
+                    ) : (
+                      <EyeIcon size={20} />
+                    )}
+                  </button>
+                </div>
               </td>
             </tr>
             <tr className="border-b">

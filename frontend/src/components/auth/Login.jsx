@@ -1,12 +1,11 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
+import { Loader, EyeIcon, EyeOffIcon } from "lucide-react";
 import { UseUserContext } from "../../context/UserContext";
-
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_DASHBOARD_ROUTE, DASHBOARD_ROUTE } from "../../router/index";
-import { useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string().email().nonempty("Email is required"),
@@ -16,6 +15,7 @@ const formSchema = z.object({
 export default function MemberLogin() {
   const navigate = useNavigate();
   const { login, setAuthenticated, authenticated, user } = UseUserContext();
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (authenticated) {
@@ -66,9 +66,9 @@ export default function MemberLogin() {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center  py-12 sm:px-6 lg:px-8">
+    <div className="flex flex-col justify-center flex-1 min-h-full py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+        <h2 className="mt-10 font-bold tracking-tight text-center text-gray-900 text-2xl/9">
           Sign in to your account
         </h2>
       </div>
@@ -78,7 +78,7 @@ export default function MemberLogin() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm/6 font-medium text-gray-900"
+              className="block font-medium text-gray-900 text-sm/6"
             >
               Email address
             </label>
@@ -103,7 +103,7 @@ export default function MemberLogin() {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="block text-sm/6 font-medium text-gray-900"
+                className="block font-medium text-gray-900 text-sm/6"
               >
                 Password
               </label>
@@ -116,7 +116,33 @@ export default function MemberLogin() {
                 </a>
               </div>
             </div>
-            <div className="mt-2">
+            <div className="relative mt-2">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                {...form.register("password")}
+                autoComplete="current-password"
+                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 flex items-center px-2 text-gray-500 right-2"
+              >
+                {showPassword ? (
+                  <EyeOffIcon size={20} />
+                ) : (
+                  <EyeIcon size={20} />
+                )}
+              </button>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+            {/* <div className="mt-2">
               <input
                 id="password"
                 name="password"
@@ -130,7 +156,7 @@ export default function MemberLogin() {
                   {errors.password.message}
                 </p>
               )}
-            </div>
+            </div> */}
           </div>
 
           <div>
@@ -143,7 +169,7 @@ export default function MemberLogin() {
           </div>
         </form>
 
-        <p className="mt-10 text-center text-sm/6 text-gray-500">
+        <p className="mt-10 text-center text-gray-500 text-sm/6">
           Not a member?{" "}
           <a
             href="/register"
