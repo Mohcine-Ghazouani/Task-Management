@@ -27,7 +27,7 @@ export default function Teams() {
       .catch((error) => {
         console.error("Error fetching users:", error);
       });
-  }, []);
+  }, [ users]);
 
   const getUsersInTeam = (teamId) => {
     return users.filter((user) => user.team_id === teamId);
@@ -65,7 +65,7 @@ console.log(editedTeamName);
 console.log(editingTeamId);
   return (
     <div className="container my-4 space-y-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-800">Teams List</h2>
         <button
           onClick={() => navigate("/add-team")}
@@ -75,15 +75,17 @@ console.log(editingTeamId);
         </button>
       </div>
 
-      {teams.map((team) => (
-        <div key={team.id} className="border p-4 rounded-lg bg-white shadow">
-          <div className="flex justify-between items-center">
+      {teams
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .map((team) => (
+        <div key={team.id} className="p-4 bg-white border rounded-lg shadow">
+          <div className="flex items-center justify-between">
             {editingTeamId === team.id ? (
               <input
                 type="text"
                 value={editedTeamName}
                 onChange={(e) => setEditedTeamName(e.target.value)}
-                className="border p-2 rounded w-1/2"
+                className="w-1/2 p-2 border rounded"
               />
             ) : (
               <h3 className="text-lg font-semibold text-gray-700">{team.name}</h3>
@@ -116,7 +118,7 @@ console.log(editingTeamId);
           </div>
           <div className="mt-4">
             <h4 className="font-medium text-gray-700">Members:</h4>
-            <ul className="list-disc pl-6">
+            <ul className="pl-6 list-disc">
               {getUsersInTeam(team.id).length > 0 ? (
                 getUsersInTeam(team.id).map((user) => (
                   <li key={user.id} className="text-gray-600">

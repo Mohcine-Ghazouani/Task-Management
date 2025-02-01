@@ -11,20 +11,27 @@ export default function AdminDashboard() {
   const [editedTask, setEditedTask] = useState({});
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [isloading, setisLoading] = useState(true);
+ 
 
   useEffect(() => {
     if (user.role === "Admin") {
+      setisLoading(false);
+      
       UserApi.getTasks().then(({ data }) => {
+        
         setTasks(data.tasks);
+        
       });
       UserApi.getUsers().then(({ data }) => {
         setUsers(data.users);
       });
       UserApi.getComments().then(({ data }) => {
         setComments(data.comments);
+        
       });
     }
-  }, [setTasks, tasks, setComments]);
+  },[ user, tasks, setTasks, users, setUsers, comments, setComments]);
   const handleDelete = (id) => {
     if (confirm("Are you sure you want to delete this task?")) {
       UserApi.deleteTask(id)
@@ -67,7 +74,7 @@ export default function AdminDashboard() {
   return (
     <div>
       <div className="container my-4 space-y-4">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-800">Tasks List</h2>
           <button
             onClick={() => navigate("/add-task")}
@@ -76,19 +83,29 @@ export default function AdminDashboard() {
             Add Task
           </button>
         </div>
-        {tasks.map((task) => (
-          <div key={task.id} className="border p-4 rounded-lg bg-white shadow">
-            <table className="table-auto w-full">
+        {isloading && (
+          <div className="flex items-center justify-center">
+            <p className="text-lg font-semibold text-gray-700">Loading tasks...</p>
+            <Loader className="w-8 h-8 text-blue-500 animate-spin" />
+          </div>
+        )}
+
+        {tasks
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        
+        .map((task) => (
+          <div key={task.id} className="p-4 bg-white border rounded-lg shadow">
+            <table className="w-full table-auto">
               <tbody>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium text-gray-700 w-1/3">
+                  <th className="w-1/3 p-3 font-medium text-left text-gray-700">
                     Task Title:
                   </th>
                   <td className="text-gray-600">
                     {editingTaskId === task.id ? (
                       <input
                         type="text"
-                        className="border p-2 w-full rounded"
+                        className="w-full p-2 border rounded"
                         value={editedTask.title || ""}
                         onChange={(e) =>
                           setEditedTask({
@@ -103,13 +120,13 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium text-gray-700">
+                  <th className="p-3 font-medium text-left text-gray-700">
                     Description:
                   </th>
                   <td className="text-gray-600">
                     {editingTaskId === task.id ? (
                       <textarea
-                        className="border p-2 w-full rounded"
+                        className="w-full p-2 border rounded"
                         value={editedTask.description || ""}
                         onChange={(e) =>
                           setEditedTask({
@@ -124,13 +141,13 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium text-gray-700">
+                  <th className="p-3 font-medium text-left text-gray-700">
                     Status:
                   </th>
                   <td className="text-gray-600">
                     {editingTaskId === task.id ? (
                       <select
-                        className="border p-2 w-full rounded"
+                        className="w-full p-2 border rounded"
                         value={editedTask.status || ""}
                         onChange={(e) =>
                           setEditedTask({
@@ -159,13 +176,13 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium text-gray-700">
+                  <th className="p-3 font-medium text-left text-gray-700">
                     Priority:
                   </th>
                   <td className="text-gray-600">
                     {editingTaskId === task.id ? (
                       <select
-                        className="border p-2 w-full rounded"
+                        className="w-full p-2 border rounded"
                         value={editedTask.priority || ""}
                         onChange={(e) =>
                           setEditedTask({
@@ -187,21 +204,21 @@ export default function AdminDashboard() {
                         Normal
                       </p>
                     ) : (
-                      <p className="px-2 py-1 text-xs font-semibold  text-green-700 bg-green-200 rounded ">
+                      <p className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded ">
                         Low
                       </p>
                     )}
                   </td>
                 </tr>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium text-gray-700">
+                  <th className="p-3 font-medium text-left text-gray-700">
                     Due Date:
                   </th>
                   <td className="text-gray-600">
                     {editingTaskId === task.id ? (
                       <input
                         type="date"
-                        className="border p-2 w-full rounded"
+                        className="w-full p-2 border rounded"
                         value={editedTask.due_date || ""}
                         onChange={(e) =>
                           setEditedTask({
@@ -216,13 +233,13 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium text-gray-700">
+                  <th className="p-3 font-medium text-left text-gray-700">
                     Assigned To:
                   </th>
                   <td className="text-gray-600">
                     {editingTaskId === task.id ? (
                       <select
-                        className="border p-2 w-full rounded"
+                        className="w-full p-2 border rounded"
                         value={editedTask.user_id || ""}
                         onChange={(e) =>
                           setEditedTask({
@@ -246,7 +263,7 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium text-gray-700">
+                  <th className="p-3 font-medium text-left text-gray-700">
                     Comments:
                   </th>
                   <td className="text-gray-600">
@@ -265,7 +282,7 @@ export default function AdminDashboard() {
                 </tr>
               </tbody>
             </table>
-            {/* <td colSpan="2" className="pt-4 text-center"> */}
+
             <div className="flex justify-center mt-4">
               {editingTaskId === task.id ? (
                 <>
