@@ -111,7 +111,7 @@ console.log(editingTeamId);
                   onClick={() => handleEdit(team.id, team.name)}
                   className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded hover:bg-blue-600"
                 >
-                  Update
+                  Edit
                 </button>
               )}
             </div>
@@ -122,7 +122,7 @@ console.log(editingTeamId);
               {getUsersInTeam(team.id).length > 0 ? (
                 getUsersInTeam(team.id).map((user) => (
                   <li key={user.id} className="text-gray-600">
-                    <span className="font-semibold">Name:</span> {user.name}{" "}
+                    <span className="font-semibold">Name:</span> {user.name}{" | "}
                     <span className="font-semibold">Email:</span> {user.email}
                   </li>
                 ))

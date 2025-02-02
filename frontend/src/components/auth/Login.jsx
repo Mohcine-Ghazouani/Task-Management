@@ -54,8 +54,7 @@ export default function MemberLogin() {
               navigate(ADMIN_DASHBOARD_ROUTE);
               break;
           }
-          console.log(role);
-          console.log(data);
+        
         }
       })
       .catch(({ response }) => {
@@ -89,7 +88,7 @@ export default function MemberLogin() {
                 type="email"
                 {...form.register("email")}
                 autoComplete="email"
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                className="block w-full rounded bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">
@@ -123,7 +122,7 @@ export default function MemberLogin() {
                 type={showPassword ? "text" : "password"}
                 {...form.register("password")}
                 autoComplete="current-password"
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                className="block w-full rounded bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
               <button
                 type="button"
@@ -142,27 +141,12 @@ export default function MemberLogin() {
                 </p>
               )}
             </div>
-            {/* <div className="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                {...form.register("password")}
-                autoComplete="current-password"
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.password.message}
-                </p>
-              )}
-            </div> */}
           </div>
 
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full justify-center rounded bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Login {isSubmitting && <Loader className="ml-2 animate-spin" />}
             </button>

@@ -68,7 +68,7 @@ export default function Users() {
   };
 
   return (
-    <div className="container my-4 space-y-4">
+    <div className="container space-y-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-800">Users List</h2>
         <button

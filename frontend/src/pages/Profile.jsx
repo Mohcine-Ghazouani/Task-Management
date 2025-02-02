@@ -11,7 +11,7 @@ export default function Profile() {
     name: user.name,
     email: user.email,
   });
-
+console.log(user)
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -76,7 +76,7 @@ export default function Profile() {
 
   return (
     <>
-      <div className="container p-2 mt-4 bg-white border rounded-lg shadow">
+      <div className="container p-2 mt-4 bg-white border rounded shadow">
         <h1 className="text-2xl font-bold text-center text-gray-700">
           Profile
         </h1>

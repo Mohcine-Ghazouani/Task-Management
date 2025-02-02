@@ -59,7 +59,7 @@ export default function AdminDashbordLayout() {
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <main
         className={`main flex-grow transition-all duration-300 ease-in-out mt-20
-          ${sidebarOpen && !isMobile ? "mx-52" : ""}
+          ${sidebarOpen && !isMobile ? "ml-52 mr-20" : ""}
         ${!sidebarOpen && !isMobile ? "mx-20" : ""}
         ${isMobile ? "mx-4" : ""}`}
       >
