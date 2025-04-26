@@ -13,8 +13,8 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'name' => 'admin',
-                'email' => 'admin@gmail.com',
-                'password' => '12345678',
+                'email' => 'admin@email.com',
+                'password' => '$2y$12$WiYIARWNAkhX5dIlo/gHvuX6fFMVbRSjPvu2lhGv6164BxbKR1AYO', // password is '12345678'
                 'role' => 'Admin',
                 'team_id' => null,
                 'created_at' => now(),
@@ -22,9 +22,9 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'membre',
-                'email' => 'membre@gmail.com',
-                'password' => '12341234',
-                'role' => 'Membre',
+                'email' => 'membre@email.com',
+                'password' => '$2y$12$WiYIARWNAkhX5dIlo/gHvuX6fFMVbRSjPvu2lhGv6164BxbKR1AYO', // password is '12345678'
+                'role' => 'Member',
                 'team_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),

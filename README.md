@@ -1,4 +1,4 @@
-# Task Management App
+# Task Management
 
 This is a full-stack task management application built using Vite-React, Laravel, and MySQL. The application provides a structured environment where users can interact based on their roles (administrator or member). Administrators can create, assign, and manage tasks, update team members, and monitor all activities, while members can track their assigned tasks, update statuses, and collaborate through comments. The application also features secure role-based access control, real-time task updates, and a modern, responsive user interface.
 
