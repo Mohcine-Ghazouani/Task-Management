@@ -21,8 +21,8 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'membre',
-                'email' => 'membre@email.com',
+                'name' => 'member',
+                'email' => 'member@email.com',
                 'password' => '$2y$12$WiYIARWNAkhX5dIlo/gHvuX6fFMVbRSjPvu2lhGv6164BxbKR1AYO', // password is '12345678'
                 'role' => 'Member',
                 'team_id' => null,
