@@ -50,7 +50,7 @@ export default function AddUser() {
           Add New User
         </h2>
         <button
-          onClick={() => navigate("/AdminDashboard")}
+          onClick={() => navigate("/users")}
           className="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
         >
           Back

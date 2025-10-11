@@ -59,10 +59,10 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
 
   const items = useMemo(
     () => [
-      { to: "/AdminDashboard", label: "Dashboard", icon: House },
+      { to: "/admin-dashboard", label: "Dashboard", icon: House },
       { to: "/teams", label: "Teams", icon: UserCog },
-      { to: "/Tasks", label: "Tasks", icon: ClipboardList },
-      { to: "/Users", label: "Users", icon: Users },
+      { to: "/tasks", label: "Tasks", icon: ClipboardList },
+      { to: "/users", label: "Users", icon: Users },
     ],
     []
   );

@@ -168,7 +168,7 @@ export default function Navbar() {
                 <MenuItem>
                   {({ active }) => (
                     <Link
-                      to="/adminprofile"
+                      to="/admin-profile"
                       className={classNames(
                         "block rounded-md px-3 py-2 text-sm text-gray-700",
                         active ? "bg-gray-100" : ""
