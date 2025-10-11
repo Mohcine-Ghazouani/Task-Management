@@ -15,6 +15,7 @@ import AddTask from "../pages/Admin/AddTask";
 import AddUser from "../pages/Admin/AddUser";
 import Teams from "../pages/Admin/Teams";
 import AddTeam from "../pages/Admin/AddTeam";
+import Users from "../pages/Admin/Users";
 
 import Dashboard from "../pages/Member/Dashboard";
 
@@ -103,6 +104,10 @@ export const router = createBrowserRouter([
       {
         path: "/add-task",
         element: <AddTask />,
+      },
+      {
+        path: "/Users",
+        element: <Users />,
       },
       {
         path: ADMIN_PROFILE_ROUTE,

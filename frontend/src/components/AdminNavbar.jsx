@@ -1,116 +1,208 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import { Bell, CircleUser } from "lucide-react";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import UserApi from "../services/Api/User/UserApi";
 import { UseUserContext } from "../context/UserContext";
 import { LOGIN_ROUTE } from "../router/index";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+
+function classNames(...xs) {
+  return xs.filter(Boolean).join(" ");
+}
 
 export default function Navbar() {
   const { logout } = UseUserContext();
   const navigate = useNavigate();
+
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const unreadCount = useMemo(() => notifications.filter((n) => !n.is_read).length, [notifications]);
 
+  const pollRef = useRef(null);
+
+  // Initial fetch + light polling (every 60s). Avoid infinite loop.
   useEffect(() => {
-    UserApi.getNotifications().then(({ data }) => {
-      setNotifications(data.notifications);
-      setUnreadCount(data.notifications.filter((n) => !n.is_read).length);
-    });
-  }, [notifications]);
+    let mounted = true;
+    async function fetchNotifications() {
+      try {
+        const { data } = await UserApi.getNotifications();
+        if (!mounted) return;
+        setNotifications(data.notifications || []);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
 
-  const markNotificationAsRead = (id) => {
-    UserApi.updateNotification(id);
+    fetchNotifications();
+
+    // Optional: background poll while page is visible
+    pollRef.current = setInterval(() => {
+      if (document.visibilityState === "visible") fetchNotifications();
+    }, 60000);
+
+    return () => {
+      mounted = false;
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);
+
+  const markNotificationAsRead = async (id) => {
+    // Optimistic update
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+    try {
+      await UserApi.updateNotification(id);
+    } catch (e) {
+      console.error(e);
+      // Rollback if failed
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: false } : n)));
+    }
   };
+
+  const markAllAsRead = async () => {
+    const ids = notifications.filter((n) => !n.is_read).map((n) => n.id);
+    if (ids.length === 0) return;
+    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+    try {
+      await Promise.all(ids.map((id) => UserApi.updateNotification(id)));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleLogout = async () => {
-    UserApi.logout().then(() => {
+    try {
+      await UserApi.logout();
+    } finally {
       logout();
       navigate(LOGIN_ROUTE);
-    });
+    }
   };
 
   return (
-    <>
-      <nav className="bg-gray-100 shadow fixed w-full z-0 top-0 left-0">
-        <div className="max-w-7xl mx-auto flex items-center h-16">
-          <div className="flex justify-between w-full">
-            <div className="flex items-start"></div>
-            <div className="flex items-center">
-              <Menu as="div" className="relative">
-                <MenuButton className="relative p-2 text-gray-600 hover:text-gray-800 transition duration-200">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Open notifications</span>
-                  <Bell className="rounded-full" />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full">
-                      {unreadCount}
-                    </span>
-                  )}
-                </MenuButton>
-                <MenuItems
-                  transition
-                  className="absolute right-0 z-10 mt-2 w-64 max-h-72 overflow-y-auto origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                >
-                  {notifications.length > 0 ? (
-                    notifications
-                      .slice()
-                      .sort(
-                        (a, b) =>
-                          new Date(b.created_at) - new Date(a.created_at)
-                      )
-                      .map((notification) => (
-                        <MenuItem key={notification.id}>
-                          <div
-                            onClick={() =>
-                              markNotificationAsRead(notification.id)
-                            }
-                            className={`cursor-pointer px-4 py-2 text-sm ${
-                              notification.is_read
-                                ? "text-gray-600"
-                                : "text-gray-800 font-semibold"
-                            } hover:bg-gray-100`}
-                          >
-                            {notification.message}
-                          </div>
-                        </MenuItem>
-                      ))
-                  ) : (
-                    <p className="px-4 py-2 text-sm text-gray-600">
-                      No notifications.
-                    </p>
-                  )}
-                </MenuItems>
-              </Menu>
+    <nav className="fixed inset-x-0 top-0 z-50 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm">
+      <div className="mx-auto flex h-16 max-w-7xl items-center px-4">
+        {/* Brand */}
+        <Link to="/" className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-gray-900">Task Manager</span>
+        </Link>
 
-              <Menu as="div" className="relative ml-3">
-                <MenuButton className="p-2 text-gray-600 hover:text-gray-800 transition duration-200">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Open user menu</span>
-                  <CircleUser className="h-8 w-8 rounded-full" />
-                </MenuButton>
-                <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none">
-                  <MenuItem>
-                    <a
-                      href="/adminprofile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        <div className="ml-auto flex items-center gap-2">
+          {/* Notifications */}
+          <Menu as="div" className="relative">
+            <MenuButton className="relative rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200">
+              <span className="sr-only">Open notifications</span>
+              <Bell className="h-5 w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
+                  {unreadCount}
+                </span>
+              )}
+            </MenuButton>
+
+            <Transition
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <MenuItems className="absolute right-0 z-50 mt-2 w-80 max-h-80 overflow-y-auto origin-top-right rounded-xl bg-white p-2 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                <div className="mb-1 flex items-center justify-between px-1">
+                  <p className="text-xs font-medium text-gray-500">Notifications</p>
+                  <button
+                    onClick={markAllAsRead}
+                    className="rounded-md px-2 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-50"
+                  >
+                    Mark all read
+                  </button>
+                </div>
+
+                {loading ? (
+                  <div className="px-3 py-6 text-center text-sm text-gray-500">Loading…</div>
+                ) : notifications.length > 0 ? (
+                  notifications
+                    .slice()
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .map((n) => (
+                      <MenuItem key={n.id}>
+                        {({ active }) => (
+                          <button
+                            onClick={() => markNotificationAsRead(n.id)}
+                            className={classNames(
+                              "w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm",
+                              active ? "bg-gray-100" : "",
+                              n.is_read ? "text-gray-600" : "font-semibold text-gray-800"
+                            )}
+                          >
+                            <p className="line-clamp-2">{n.message}</p>
+                            <p className="mt-0.5 text-[11px] text-gray-500">{new Date(n.created_at).toLocaleString()}</p>
+                          </button>
+                        )}
+                      </MenuItem>
+                    ))
+                ) : (
+                  <div className="px-3 py-6 text-center text-sm text-gray-500">No notifications</div>
+                )}
+              </MenuItems>
+            </Transition>
+          </Menu>
+
+          {/* User menu */}
+          <Menu as="div" className="relative">
+            <MenuButton className="rounded-full p-1 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200">
+              <span className="sr-only">Open user menu</span>
+              <CircleUser className="h-8 w-8" />
+            </MenuButton>
+            <Transition
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <MenuItems className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-xl bg-white p-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                <MenuItem>
+                  {({ active }) => (
+                    <Link
+                      to="/adminprofile"
+                      className={classNames(
+                        "block rounded-md px-3 py-2 text-sm text-gray-700",
+                        active ? "bg-gray-100" : ""
+                      )}
                     >
                       Profile
-                    </a>
-                  </MenuItem>
-                  <MenuItem>
+                    </Link>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {({ active }) => (
                     <button
-                      onClick={handleLogout}
-                      className="block text-left px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={async () => {
+                        try {
+                          await UserApi.logout();
+                        } finally {
+                          logout();
+                          navigate(LOGIN_ROUTE);
+                        }
+                      }}
+                      className={classNames(
+                        "block w-full rounded-md px-3 py-2 text-left text-sm text-gray-700",
+                        active ? "bg-gray-100" : ""
+                      )}
                     >
                       Logout
                     </button>
-                  </MenuItem>
-                </MenuItems>
-              </Menu>
-            </div>
-          </div>
+                  )}
+                </MenuItem>
+              </MenuItems>
+            </Transition>
+          </Menu>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 }
