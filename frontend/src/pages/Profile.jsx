@@ -343,7 +343,7 @@ export default function Profile() {
               </button>
             </div>
             <p className="mt-1 text-xs text-gray-500">
-              Must be at least 8 chars and include letters & numbers.
+              Must be at least 8 characters.
             </p>
           </div>
 

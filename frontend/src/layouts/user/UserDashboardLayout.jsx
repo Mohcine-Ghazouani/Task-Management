@@ -56,17 +56,15 @@ export default function UserDashbordLayout() {
 
   return (
     <div className="flex flex-col h-screen">
-      <header>
+      <header className="fixed inset-x-0 top-0 z-30">
         <Navbar />
       </header>
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      
+
       <main
-        className={`main flex-grow transition-all duration-300 ease-in-out mt-20
-          ${sidebarOpen && !isMobile ? "ml-52 mr-20" : ""}
-        ${!sidebarOpen && !isMobile ? "mx-20" : ""}
-        ${isMobile ? "mx-4" : ""}`}
+         style={{ marginLeft: "var(--sbw, 0px)" }}
+        className="mt-24 flex-1 px-4 transition-[margin] duration-300 ease-in-out md:px-10 lg:px-20 "
       >
-        <h1 className="text-2xl font-bold text-center"> {user.name}</h1>
         <Outlet />
       </main>
       <footer

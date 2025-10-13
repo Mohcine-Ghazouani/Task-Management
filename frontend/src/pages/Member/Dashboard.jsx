@@ -1,269 +1,429 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { UseUserContext } from "../../context/UserContext";
-import { Loader } from "lucide-react";
-
 import UserApi from "../../services/Api/User/UserApi";
+import {
+  Loader2,
+  ClipboardList,
+  CheckCircle2,
+  Hourglass,
+  CircleAlert,
+  CalendarClock,
+  CalendarDays,
+  Flag,
+  Plus,
+  Check,
+  X,
+} from "lucide-react";
+
+function StatCard({ title, value, Icon, subtext }) {
+  return (
+    <div className="flex items-center gap-4 rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md">
+      <div className="rounded-xl bg-gray-100 p-3">
+        <Icon className="h-6 w-6" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-gray-500">{title}</p>
+        <p className="truncate text-2xl font-bold text-gray-900">{value}</p>
+        {subtext ? <p className="text-xs text-gray-500">{subtext}</p> : null}
+      </div>
+    </div>
+  );
+}
+
+function Badge({ intent = "gray", children }) {
+  const cls =
+    intent === "green"
+      ? "bg-green-100 text-green-700"
+      : intent === "yellow"
+      ? "bg-yellow-100 text-yellow-700"
+      : intent === "red"
+      ? "bg-red-100 text-red-700"
+      : "bg-gray-100 text-gray-800";
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${cls}`}
+    >
+      {children}
+    </span>
+  );
+}
 
 export default function Dashboard() {
   const { user, userTask, setUserTask, comments, setComments } =
     UseUserContext();
-  const [editingTaskId, setEditingTaskId] = useState(null);
-  const [editedTask, setEditedTask] = useState({});
+
+  // Member can only edit STATUS
+  const [statusEditId, setStatusEditId] = useState(null);
+  const [statusDraft, setStatusDraft] = useState("");
+  const [actionLoading, setActionLoading] = useState(false);
+
+  // Comments (allowed)
   const [addingCommentId, setAddingCommentId] = useState(null);
   const [newComment, setNewComment] = useState("");
-  const [loading, setLoading] = useState(false);
 
+  // Page loading (like admin)
+  const [tasksLoading, setTasksLoading] = useState(true);
+
+  // Fetch my tasks & comments (no fetch loop)
   useEffect(() => {
-    if (user.role === "Member") {
-      UserApi.getUserTasks(user.id).then(({ data }) => {
-        setUserTask(data.tasks);
-      });
-      UserApi.getUserComments(user.id).then(({ data }) => {
-        setComments(data.comments);
-      });
+    let mounted = true;
+    async function fetchData() {
+      if (user?.role !== "Member" || !user?.id) {
+        setTasksLoading(false);
+        return;
+      }
+      try {
+        setTasksLoading(true);
+        const [{ data: t }, { data: c }] = await Promise.all([
+          UserApi.getUserTasks(user.id),
+          UserApi.getUserComments(user.id),
+        ]);
+        if (!mounted) return;
+        setUserTask(t.tasks || []);
+        setComments(c.comments || []);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (mounted) setTasksLoading(false);
+      }
     }
-  }, [user, setUserTask, userTask]);
+    fetchData();
+    return () => {
+      mounted = false;
+    };
+  }, [user?.id, user?.role, setUserTask, setComments]);
 
-  const handleEdit = (task) => {
+  // Stats
+  const { stats, myTasksSorted } = useMemo(() => {
+    const list = Array.isArray(userTask) ? userTask.slice() : [];
+    const now = new Date();
+    const in7d = new Date(now);
+    in7d.setDate(in7d.getDate() + 7);
+    const toDate = (v) => {
+      const d = new Date(v);
+      return isNaN(d) ? null : d;
+    };
 
-    setEditingTaskId(task.id);
-    setEditedTask({ ...task });
-  };
+    const completed = list.filter((t) => t.status === "Completed").length;
+    const inProgress = list.filter((t) => t.status === "In progress").length;
+    const notStarted = list.filter((t) => t.status === "Not started").length;
 
-  const handleUpdate = () => {
-    setLoading(true);
-    UserApi.updateTask(editingTaskId, editedTask)
-      .then(({ data }) => {
-        
-        setUserTask((prevTasks) =>
-          prevTasks.map((task) =>
-            task.id === editingTaskId ? data.task : task
-          )
-        );
-        setLoading(false);
-        setEditingTaskId(null);
+    const overdue = list.filter((t) => {
+      const d = t.due_date ? toDate(t.due_date) : null;
+      return d && d < now && t.status !== "Completed";
+    }).length;
 
-      })
-      .catch((error) => {
-        console.error("Error updating task:", error);
-      });
-  };
+    const dueSoon = list.filter((t) => {
+      const d = t.due_date ? toDate(t.due_date) : null;
+      return d && d >= now && d <= in7d && t.status !== "Completed";
+    }).length;
 
-  const handleDiscard = () => {
-    setEditingTaskId(null);
-    setEditedTask({});
-  };
+    const myTasksSorted = list.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
 
-  const handleAddComment = (taskId) => {
-    setAddingCommentId(taskId);
+    return {
+      stats: {
+        total: list.length,
+        completed,
+        inProgress,
+        notStarted,
+        overdue,
+        dueSoon,
+      },
+      myTasksSorted,
+    };
+  }, [userTask]);
+
+  // map to badge intents
+  const statusIntent = (s) =>
+    s === "Completed" ? "green" : s === "In progress" ? "yellow" : "red";
+  const priorityIntent = (p) =>
+    p === "High" ? "red" : p === "Normal" ? "yellow" : "green";
+
+  // Status editing
+  const startEditStatus = (task) => {
+    setStatusEditId(task.id);
+    setStatusDraft(task.status || "Not started");
+    // allow adding comment concurrently? choose: no overlap
+    setAddingCommentId(null);
     setNewComment("");
   };
-
-    const handleSaveComment = () => {
-    setLoading(true);
-    UserApi.createComment({ content: newComment , user_id: user.id , task_id: addingCommentId})
-      .then(({ data }) => {
-        setComments((prevComments) => [...prevComments, data.comment]);
-        setAddingCommentId(null);
-        setNewComment("");
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error adding comment:", error);
+  const cancelEditStatus = () => {
+    setStatusEditId(null);
+    setStatusDraft("");
+  };
+  const saveStatus = async () => {
+    if (!statusEditId) return;
+    try {
+      setActionLoading(true);
+      const { data } = await UserApi.updateTask(statusEditId, {
+        status: statusDraft,
       });
+      setUserTask((prev) =>
+        prev.map((t) => (t.id === statusEditId ? data.task : t))
+      );
+      cancelEditStatus();
+    } catch (e) {
+      console.error("Error updating status:", e);
+    } finally {
+      setActionLoading(false);
+    }
   };
 
-  const handleDiscardComment = () => {
+  // Comments
+  const startAddComment = (taskId) => {
+    setAddingCommentId(taskId);
+    setNewComment("");
+    // prevent overlapping edit
+    setStatusEditId(null);
+    setStatusDraft("");
+  };
+  const saveComment = async () => {
+    if (!newComment.trim()) return;
+    try {
+      setActionLoading(true);
+      const { data } = await UserApi.createComment({
+        content: newComment,
+        user_id: user.id,
+        task_id: addingCommentId,
+      });
+      setComments((prev) => [...prev, data.comment]);
+      setAddingCommentId(null);
+      setNewComment("");
+    } catch (e) {
+      console.error("Error adding comment:", e);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+  const cancelComment = () => {
     setAddingCommentId(null);
     setNewComment("");
   };
 
-
-
   return (
-    <>
-      <div className="container my-4 space-y-4">
-        {userTask.map((task) => (
-          <div key={task.id} className="p-4 bg-white border rounded-lg shadow">
-            <table className="w-full table-auto">
-              <tbody>
-                <tr className="border-b">
-                  <th className="w-1/3 p-3 font-medium text-left text-gray-700">
-                    Task Title:
-                  </th>
-                  <td className="text-gray-600">{task.title}</td>
-                </tr>
-                <tr className="border-b">
-                  <th className="p-3 font-medium text-left text-gray-700">
-                    Description:
-                  </th>
-                  <td className="text-gray-600">{task.description}</td>
-                </tr>
+    <div className="container mx-auto space-y-4">
+      {/* Greeting */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Welcome{user?.name ? `, ${user.name}` : ""} 👋
+        </h1>
+        <p className="text-sm text-gray-500">
+          Here’s a quick look at your work.
+        </p>
+      </div>
 
-                <tr className="border-b">
-                  <th className="p-3 font-medium text-left text-gray-700">
-                    Status:
-                  </th>
-                  <td className="text-gray-600">
-                    {editingTaskId === task.id ? (
-                      <select
-                        className="w-full p-2 border rounded"
-                        value={editedTask.status || ""}
-                        onChange={(e) =>
-                          setEditedTask({
-                            ...editedTask,
-                            status: e.target.value,
-                          })
-                        }
+      {/* Stats row (admin style) */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StatCard title="My Tasks" value={stats.total} Icon={ClipboardList} />
+        <StatCard
+          title="Completed"
+          value={stats.completed}
+          Icon={CheckCircle2}
+        />
+        <StatCard
+          title="In Progress"
+          value={stats.inProgress}
+          Icon={Hourglass}
+        />
+        <StatCard
+          title="Not Started"
+          value={stats.notStarted}
+          Icon={CircleAlert}
+        />
+        <StatCard
+          title="Overdue"
+          value={stats.overdue}
+          Icon={CircleAlert}
+          subtext="Past due & not completed"
+        />
+        <StatCard
+          title="Due Soon (7d)"
+          value={stats.dueSoon}
+          Icon={CalendarClock}
+          subtext="Upcoming within a week"
+        />
+      </div>
+
+      {/* Loading banner under stats (like admin) */}
+      {tasksLoading && (
+        <div className="flex items-center justify-center gap-2 rounded-xl border bg-white p-4">
+          <p className="text-sm font-semibold text-gray-700">Loading tasks…</p>
+          <Loader2 className="h-5 w-5 animate-spin" />
+        </div>
+      )}
+
+      {/* Task cards */}
+      {!tasksLoading &&
+        (myTasksSorted.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {myTasksSorted.map((task) => {
+              const due = task.due_date ? new Date(task.due_date) : null;
+              const now = new Date();
+              const overdue = !!(
+                due &&
+                due < now &&
+                task.status !== "Completed"
+              );
+
+              return (
+                <div
+                  key={task.id}
+                  className="rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md"
+                >
+                  {/* Header */}
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <h3 className="line-clamp-1 text-base font-semibold text-gray-900">
+                      {task.title}
+                    </h3>
+
+                    {statusEditId === task.id ? (
+                      <div className="flex items-center gap-2">
+                        <select
+                          className="rounded-lg border border-gray-300 p-1.5 text-xs focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                          value={statusDraft}
+                          onChange={(e) => setStatusDraft(e.target.value)}
+                          autoFocus
+                        >
+                          <option value="Not started">Not started</option>
+                          <option value="In progress">In progress</option>
+                          <option value="Completed">Completed</option>
+                        </select>
+
+                        <button
+                          onClick={saveStatus}
+                          className="inline-flex items-center justify-center rounded-md bg-green-600 p-1.5 text-white hover:bg-green-700 focus:outline-none"
+                          title="Save status"
+                        >
+                          <Check className="h-4 w-4" />
+                          {actionLoading && (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                          )}
+                        </button>
+                        <button
+                          onClick={cancelEditStatus}
+                          className="inline-flex items-center justify-center rounded-md bg-gray-500 p-1.5 text-white hover:bg-gray-600 focus:outline-none"
+                          title="Cancel"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => startEditStatus(task)}
+                        className="group inline-flex items-center"
+                        title="Change status"
                       >
-                        <option value="Not started">Not started</option>
-                        <option value="In progress">In progress</option>
-                        <option value="Completed">Completed</option>
-                      </select>
-                    ) : task.status === "Completed" ? (
-                      <p className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded">
-                        Completed
-                      </p>
-                    ) : task.status === "In progress" ? (
-                      <p className="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-200 rounded">
-                        In progress
-                      </p>
-                    ) : (
-                      <p className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-200 rounded">
-                        Not started
-                      </p>
+                        <Badge intent={statusIntent(task.status)}>
+                          {task.status}
+                        </Badge>
+                      </button>
                     )}
-                  </td>
-                </tr>
-                <tr className="border-b">
-                  <th className="p-3 font-medium text-left text-gray-700">
-                    Priority:
-                  </th>
-                  <td className="text-gray-600">
-                    {task.priority === "High" ? (
-                      <p className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-200 rounded">
-                        High
-                      </p>
-                    ) : task.priority === "Normal" ? (
-                      <p className="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-200 rounded">
-                        Normal
-                      </p>
-                    ) : (
-                      <p className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded ">
-                        Low
-                      </p>
-                    )}
-                  </td>
-                </tr>
-                <tr className="border-b">
-                  <th className="p-3 font-medium text-left text-gray-700">
-                    Due Date:
-                  </th>
-                  <td className="text-gray-600">{task.due_date}</td>
-                </tr>
-                <tr className="border-b">
-                  <th className="p-3 font-medium text-left text-gray-700">
-                    Assigned To:
-                  </th>
-                  <td className="text-gray-600">
-                    {task.user ? (
-                      task.user.name
-                    ) : (
-                      <p className="text-red-500">Unassigned</p>
-                    )}
-                  </td>
-                </tr>
+                  </div>
 
-                <tr className="border-b">
-                  <th className="p-3 font-medium text-left text-gray-700">
-                    Comments:
-                  </th>
-                  <td className="text-gray-600">
+                  {/* Description (read-only) */}
+                  <p className="line-clamp-3 text-sm text-gray-700">
+                    {task.description || "No description."}
+                  </p>
+
+                  {/* Meta */}
+                  <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <CalendarDays className="h-4 w-4" />
+                      {due ? (
+                        <span
+                          className={
+                            overdue ? "font-semibold text-red-600" : ""
+                          }
+                        >
+                          {due.toLocaleDateString()}
+                          {overdue ? " · Overdue" : ""}
+                        </span>
+                      ) : (
+                        <span className="text-gray-500">No due date</span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-end gap-2 text-gray-700">
+                      <Flag className="h-4 w-4" />
+                      <Badge intent={priorityIntent(task.priority)}>
+                        {task.priority || "Normal"}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Comments (view + add) */}
+                  <div className="mt-4 border-t pt-3">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
+                      Comments
+                    </p>
+                    {comments.some((c) => c.task_id === task.id) ? (
+                      <div className="space-y-1">
+                        {comments
+                          .filter((c) => c.task_id === task.id)
+                          .map((c) => (
+                            <p
+                              key={c.id || c.created_at}
+                              className="text-sm text-gray-700"
+                            >
+                              {c.content}
+                            </p>
+                          ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500">No comments yet.</p>
+                    )}
+
                     {addingCommentId === task.id ? (
-                      <>
+                      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
                         <input
-                          required
                           type="text"
                           value={newComment}
                           onChange={(e) => setNewComment(e.target.value)}
-                          className="w-full p-2 border rounded"
-                          placeholder="Add a comment..."
+                          className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                          placeholder="Write a comment…"
                         />
-                      </>
-                    ) : comments.some(
-                        (comment) => comment.task_id === task.id
-                      ) ? (
-                      comments
-                        .filter((comment) => comment.task_id === task.id)
-                        .map((comment, index) => (
-                          <p key={index} className="text-sm text-gray-700">
-                            {comment.content}
-                          </p>
-                        ))
+                        <div className="flex gap-2">
+                          <button
+                            onClick={saveComment}
+                            className="flex items-center rounded bg-green-600 px-3 py-2 text-xs font-semibold text-white hover:bg-green-700"
+                          >
+                            Save{" "}
+                            {actionLoading && (
+                              <Loader2 className="h-5 w-5 animate-spin" />
+                            )}
+                          </button>
+                          <button
+                            onClick={cancelComment}
+                            className="rounded bg-gray-500 px-3 py-2 text-xs font-semibold text-white hover:bg-gray-600"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
                     ) : (
-                      <p className="text-red-500">No comments</p>
+                      <div className="mt-3">
+                        <button
+                          onClick={() => startAddComment(task.id)}
+                          className="rounded bg-green-600 px-2 py-2 text-xs font-semibold text-white hover:bg-green-700"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      </div>
                     )}
-                  </td>
-                </tr>
-                </tbody>
-                </table>
-                {/* <tr>
-                  <td colSpan="2" className="pt-4 text-center"> */}
-                  <div className="flex justify-center mt-4">
-                    {editingTaskId === task.id ? (
-                      <>
-                        <button
-                          onClick={handleUpdate}
-                          className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
-                        >
-                          Save {loading && <Loader className="ml-2 animate-spin" />}
-                        </button>
-                        <button
-                          onClick={handleDiscard}
-                          className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
-                        >
-                          Discard
-                        </button>
-                      </>
-                    ) : addingCommentId === task.id ? (
-                      <>
-                        <button
-                          onClick={handleSaveComment}
-                          className="flex items-center px-4 py-2 mr-2 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
-                        >
-                          Save Comment {loading && <Loader className="ml-2 animate-spin" />}
-                        </button>
-                        <button
-                          onClick={handleDiscardComment}
-                          className="px-4 py-2 text-xs font-semibold text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
-                        >
-                          Discard
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => handleEdit(task)}
-                          className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleAddComment(task.id)}
-                          className="px-4 py-2 mr-2 text-xs font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
-                        >
-                          Add Comment
-                        </button>
-                      </>
-                    )}
-                  {/* </td>
-                </tr>
-              </tbody>
-            </table> */}
-            </div>
+                  </div>
+
+                  
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="rounded-2xl border bg-white p-8 text-center text-sm text-gray-600 shadow-sm">
+            You have no tasks yet.
           </div>
         ))}
-      </div>
-    </>
+    </div>
   );
 }

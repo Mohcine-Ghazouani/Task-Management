@@ -335,7 +335,7 @@ export default function AdminDashboard() {
                         disabled={savingId === task.id}
                         className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white shadow-sm ring-1 ring-green-600/10 transition hover:bg-green-700 disabled:opacity-70"
                       >
-                        Save {savingId === task.id && <Loader2 className="h-4 w-4 animate-spin" />}
+                        Save {savingId === task.id && <Loader2 className="h-5 w-5 animate-spin" />}
                       </button>
                     </>
                   ) : (
