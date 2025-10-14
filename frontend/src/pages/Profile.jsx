@@ -23,7 +23,7 @@ function StatCard({ title, value, Icon, subtext }) {
       <div className="min-w-0">
         <p className="text-sm font-medium text-gray-500">{title}</p>
         <p className="truncate text-2xl font-bold text-gray-900">{value}</p>
-        {subtext ? <p className="text-xs text-gray-500">{subtext}</p> : null}
+        {subtext ? <p className="text-sm text-gray-500">{subtext}</p> : null}
       </div>
     </div>
   );
@@ -141,9 +141,9 @@ export default function Profile() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto">
         <div className="flex items-center gap-3">
           <div className="grid h-12 w-12 place-items-center rounded-full bg-gray-100 text-gray-700">
             <UserIcon className="h-6 w-6" />
@@ -158,7 +158,7 @@ export default function Profile() {
       </div>
 
       {/* Stats (from tasks) */}
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mx-auto grid  grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard title="My Tasks" value={stats.mine} Icon={ClipboardList} />
         <StatCard
           title="Completed"
@@ -170,7 +170,7 @@ export default function Profile() {
       {/* Banner */}
       {banner.msg && (
         <div
-          className={`mx-auto max-w-5xl rounded-xl border px-4 py-3 text-sm ${
+          className={`mx-auto  rounded-xl border px-4 py-3 text-sm ${
             banner.type === "success"
               ? "border-green-200 bg-green-50 text-green-800"
               : "border-red-200 bg-red-50 text-red-800"
@@ -180,33 +180,33 @@ export default function Profile() {
         </div>
       )}
       {/* Profile card */}
-      <div className="mx-auto max-w-5xl rounded-2xl border bg-white p-5 shadow-sm">
+      <div className="mx-auto  rounded-2xl border bg-white p-5 shadow-sm">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="text-sm font-medium uppercase tracking-wide text-gray-500">
               Role
             </p>
-            <span className="mt-1 inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+            <span className="mt-1 inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-sm font-medium text-blue-700">
               <ShieldCheck className="mr-1 h-3.5 w-3.5" /> {user?.role || "—"}
             </span>
           </div>
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="text-sm font-medium uppercase tracking-wide text-gray-500">
               Team
             </p>
             {user?.team ? (
-              <span className="mt-1 inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-800">
+              <span className="mt-1 inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-sm font-medium text-gray-800">
                 <UsersIcon className="mr-1 h-3.5 w-3.5" /> {user.team}
               </span>
             ) : (
-              <span className="mt-1 inline-flex items-center rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700">
+              <span className="mt-1 inline-flex items-center rounded-full bg-red-50 px-2.5 py-1 text-sm font-medium text-red-700">
                 No Team
               </span>
             )}
           </div>
 
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="text-sm font-medium uppercase tracking-wide text-gray-500">
               Name
             </p>
             {isEditing ? (
@@ -226,7 +226,7 @@ export default function Profile() {
           </div>
 
           <div>
-            <p className="flex items-center gap-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="flex items-center gap-1 text-sm font-medium uppercase tracking-wide text-gray-500">
               <Mail className="h-3.5 w-3.5" /> Email
             </p>
             {isEditing ? (
@@ -242,7 +242,7 @@ export default function Profile() {
               <p className="mt-1 text-sm text-gray-800">{user?.email}</p>
             )}
             {isEditing && !emailValid && (
-              <p className="mt-1 text-xs text-red-600">
+              <p className="mt-1 text-sm text-red-600">
                 Please enter a valid email address.
               </p>
             )}
@@ -260,14 +260,14 @@ export default function Profile() {
                     email: user?.email || "",
                   });
                 }}
-                className="inline-flex items-center rounded-xl bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-800 transition hover:bg-gray-200"
+                className="inline-flex items-center rounded-xl bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveProfile}
                 disabled={!canSaveProfile}
-                className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white shadow-sm ring-1 ring-green-600/10 transition hover:bg-green-700 disabled:opacity-70"
+                className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-green-600/10 transition hover:bg-green-700 disabled:opacity-70"
               >
                 Save{" "}
                 {savingProfile && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -276,7 +276,7 @@ export default function Profile() {
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="inline-flex items-center rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white shadow-sm ring-1 ring-blue-600/10 transition hover:bg-blue-700"
+              className="inline-flex items-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-blue-600/10 transition hover:bg-blue-700"
             >
               Edit
             </button>
@@ -285,13 +285,13 @@ export default function Profile() {
       </div>
 
       {/* Password card */}
-      <div className="mx-auto max-w-5xl rounded-2xl border bg-white p-5 shadow-sm">
+      <div className="mx-auto  rounded-2xl border bg-white p-5 shadow-sm">
         <h2 className="mb-3 text-lg font-semibold text-gray-900">
           Update Password
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
-            <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <label className="text-sm font-medium uppercase tracking-wide text-gray-500">
               Current Password
             </label>
             <div className="relative">
@@ -318,7 +318,7 @@ export default function Profile() {
           </div>
 
           <div>
-            <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <label className="text-sm font-medium uppercase tracking-wide text-gray-500">
               New Password
             </label>
             <div className="relative">
@@ -342,13 +342,13 @@ export default function Profile() {
                 )}
               </button>
             </div>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-sm text-gray-500">
               Must be at least 8 characters.
             </p>
           </div>
 
           <div>
-            <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <label className="text-sm font-medium uppercase tracking-wide text-gray-500">
               Confirm Password
             </label>
             <div className="relative">
@@ -373,7 +373,7 @@ export default function Profile() {
               </button>
             </div>
             {pwd.confirm && pwd.next !== pwd.confirm && (
-              <p className="mt-1 text-xs text-red-600">
+              <p className="mt-1 text-sm text-red-600">
                 Passwords do not match.
               </p>
             )}
@@ -383,14 +383,14 @@ export default function Profile() {
         <div className="mt-4 flex justify-end gap-2">
           <button
             onClick={() => setPwd({ current: "", next: "", confirm: "" })}
-            className="inline-flex items-center rounded-xl bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-800 transition hover:bg-gray-200"
+            className="inline-flex items-center rounded-xl bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-200"
           >
             Cancel
           </button>
           <button
             onClick={handleChangePassword}
             
-            className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-3 py-2 text-xs font-semibold text-white shadow-sm ring-1 ring-green-600/10 transition hover:bg-green-700 disabled:opacity-70"
+            className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-green-600/10 transition hover:bg-green-700 disabled:opacity-70"
           >
             Update{" "}
             {savingPassword && <Loader2 className="h-4 w-4 animate-spin" />}

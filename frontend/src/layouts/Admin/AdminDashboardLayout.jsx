@@ -79,10 +79,10 @@ export default function AdminDashbordLayout() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="fixed inset-x-0 top-0 z-30">
+      <header className="fixed">
         <AdminNavbar />
       </header>
-      <div className="fixed top-16 left-0 z-40 h-[calc(100%-4rem)] border-r border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 transition-all duration-300 ease-in-out">
+      <div >
        {/* Sidebar sets --sbw. Desktop content is pushed by this margin. */}
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> 
       </div>
@@ -90,7 +90,7 @@ export default function AdminDashbordLayout() {
 
       <main
         style={{ marginLeft: "var(--sbw, 0px)" }}
-        className="mt-20 flex-1 px-4 transition-[margin] duration-300 ease-in-out md:px-10 lg:px-20"
+        className="mt-20 flex-1 px-3 transition-[margin] duration-300 ease-in-out md:px-10 lg:px-10"
       >
         
         <Outlet />

@@ -1,6 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import Footer from "../../components/Footer";
 import { LOGIN_ROUTE } from "../../router/index";
 import { useEffect, useState } from "react";
@@ -9,9 +8,6 @@ import { UseUserContext } from "../../context/UserContext";
 import UserApi from "../../services/Api/User/UserApi";
 
 export default function UserDashbordLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const isMobile = window.innerWidth < 768;
-
   const { user, setUser, authenticated, setAuthenticated, logout } =
     UseUserContext();
 
@@ -19,12 +15,7 @@ export default function UserDashbordLayout() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    //const { role } = user;
-
     if (authenticated === true) {
-      // if (role === "Admin") {
-      //   navigate(ADMIN_DASHBOARD_ROUTE);
-      // }
       setIsLoading(false);
       UserApi.getUser()
         .then(({ data }) => {
@@ -50,29 +41,22 @@ export default function UserDashbordLayout() {
     }
   }, [teamId]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex min-h-screen flex-col">
+      {/* Fixed Navbar */}
       <header className="fixed inset-x-0 top-0 z-30">
         <Navbar />
       </header>
-      
 
-      <main
-         style={{ marginLeft: "var(--sbw, 0px)" }}
-        className="mt-24 flex-1 px-4 transition-[margin] duration-300 ease-in-out md:px-10 lg:px-20 "
-      >
+      {/* Main content (offset for the navbar height ≈ h-16) */}
+      <main className="mt-24 flex-1 px-4 md:px-10 lg:px-20">
         <Outlet />
       </main>
-      <footer
-        className={`bg-gray-600 text-white p-4 mt-8 
-                ${sidebarOpen && !isMobile ? "ml-48" : ""}
-              ${!sidebarOpen && !isMobile ? "ml-16" : ""}
-              ${isMobile ? "" : ""}`}
-      >
+
+      {/* Footer */}
+      <footer className="bg-gray-600 text-white p-4 mt-8">
         <Footer />
       </footer>
     </div>

@@ -6,7 +6,7 @@ import {
   MenuItems,
   Transition,
 } from "@headlessui/react";
-import { Bell, CircleUser, UserIcon } from "lucide-react";
+import { Bell, UserIcon } from "lucide-react";
 import UserApi from "../services/Api/User/UserApi";
 import { UseUserContext } from "../context/UserContext";
 import { LOGIN_ROUTE } from "../router/index";
@@ -87,26 +87,24 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed inset-x-0 top-0 z-50 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
-      <div className="mx-auto px-4 pt-4 sm:px-4 lg:px-8 ">
+    <nav className="fixed inset-x-0 top-0 z-50 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm">
+      <div className="mx-auto px-4 pt-2 sm:px-4 lg:px-8 ">
         {/* Rounded container like the screenshot */}
         <div className="flex px-4 h-14 items-center justify-between rounded-xl bg-white shadow-md ring-1 ring-black/5">
           {/* LEFT — Brand */}
           <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gray-100 text-gray-700 ">
               TM
             </div>
-            <span className=" sm:inline text-sm font-semibold text-gray-900">
+            <span className="sm:inline text-sm font-semibold text-gray-900">
               Task Manager
             </span>
           </Link>
 
-          {/* CENTER — (empty to match the sample layout) */}
-          <div className="flex-1" />
 
           {/* RIGHT — Bell next to Profile */}
-          <div className="flex items-center gap-2">
-            {/* Notifications (Bell) */}
+          <div className="ml-auto flex items-center gap-2">
+            {/* Notifications */}
             <Menu as="div" className="relative">
               <MenuButton className="relative rounded-full p-1.5 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200">
                 <span className="sr-only">Open notifications</span>
@@ -126,7 +124,7 @@ export default function Navbar() {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <MenuItems className="absolute right-0 z-[70] mt-2 w-80 max-h-80 overflow-y-auto origin-top-right rounded-xl bg-white p-2 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                <MenuItems className="absolute right-0 z-[70] mt-2 w-72 max-h-80 overflow-y-auto origin-top-right rounded-xl bg-white p-2 shadow-lg ring-1 ring-black/5 focus:outline-none">
                   <div className="mb-1 flex items-center justify-between px-1">
                     <p className="text-xs font-medium text-gray-500">
                       Notifications
@@ -182,9 +180,9 @@ export default function Navbar() {
 
             {/* Profile */}
             <Menu as="div" className="relative">
-              <MenuButton className="relative rounded-full p-0.5 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200">
+              <MenuButton className="relative rounded-full p-1 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200">
                 <span className="sr-only">Open user menu</span>
-                <UserIcon className="h-8 w-8" />
+                <UserIcon className="h-7 w-7" />
                 <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white" />
               </MenuButton>
 

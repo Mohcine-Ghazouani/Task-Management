@@ -114,7 +114,7 @@ export default function Dashboard() {
   const pieData = useMemo(() => teamDist.map((d) => ({ name: d.team, value: d.count })), [teamDist]);
 
   return (
-    <div className="container mx-auto space-y-6 p-4 md:p-6">
+    <div className="container mx-auto space-y-4">
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
