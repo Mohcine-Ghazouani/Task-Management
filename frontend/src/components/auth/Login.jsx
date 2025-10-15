@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, EyeIcon, EyeOffIcon } from "lucide-react";
 import { UseUserContext } from "../../context/UserContext";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ADMIN_DASHBOARD_ROUTE, DASHBOARD_ROUTE } from "../../router/index";
 
 const formSchema = z.object({
-  email: z.string().email().nonempty("Email is required"),
+  email: z.string().email("Enter a valid email").nonempty("Email is required"),
   password: z.string().nonempty("Password is required"),
 });
 
@@ -16,151 +16,168 @@ export default function MemberLogin() {
   const navigate = useNavigate();
   const { login, setAuthenticated, authenticated, user } = UseUserContext();
   const [showPassword, setShowPassword] = useState(false);
+  const [globalError, setGlobalError] = useState("");
 
   useEffect(() => {
     if (authenticated) {
-      const { role } = user;
-      switch (role) {
-        case "Member":
-          navigate(DASHBOARD_ROUTE);
-          break;
-        case "Admin":
-          navigate(ADMIN_DASHBOARD_ROUTE);
-          break;
-      }
+      const role = user?.role;
+      if (role === "Member") navigate(DASHBOARD_ROUTE);
+      if (role === "Admin") navigate(ADMIN_DASHBOARD_ROUTE);
     }
   }, [authenticated, user, navigate]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
+    defaultValues: { email: "", password: "" },
+    mode: "onTouched",
   });
 
   const {
+    register,
+    handleSubmit,
     setError,
     formState: { errors, isSubmitting },
   } = form;
 
   const onSubmit = async (values) => {
-    await login(values.email, values.password)
-      .then(({ status, data }) => {
-        if (status === 200) {
-          setAuthenticated(true);
-          const { role } = data.user;
-          switch (role) {
-            case "Member":
-              navigate(DASHBOARD_ROUTE);
-              break;
-            case "Admin":
-              navigate(ADMIN_DASHBOARD_ROUTE);
-              break;
-          }
-        
-        }
-      })
-      .catch(({ response }) => {
-        setError("email", {
-          message: response.data.errors.email.join(),
-        });
-      });
+    setGlobalError("");
+    try {
+      const { status, data } = await login(values.email, values.password);
+      if (status === 200) {
+        setAuthenticated(true);
+        const role = data.user?.role;
+        if (role === "Member") navigate(DASHBOARD_ROUTE);
+        if (role === "Admin") navigate(ADMIN_DASHBOARD_ROUTE);
+      }
+    } catch (e) {
+      const resp = e?.response?.data;
+      const emailMsg =
+        resp?.errors?.email?.join?.() ||
+        resp?.message ||
+        "Invalid credentials. Please try again.";
+      // field-level + global feedback
+      setError("email", { message: emailMsg });
+      setError("password", { message: " " }); // nudge red outline on password too
+      setGlobalError(emailMsg);
+    }
   };
 
   return (
-    <div className="flex flex-col justify-center flex-1 min-h-full py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 font-bold tracking-tight text-center text-gray-900 text-2xl/9">
-          Sign in to your account
-        </h2>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md">
+        {/* Brand */}
+        <div className="mb-6 flex items-center justify-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gray-100 text-gray-700">
+            TM
+          </div>
+          <div className="text-lg font-semibold text-gray-900">Task Manager</div>
+        </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div>
-            <label
-              htmlFor="email"
-              className="block font-medium text-gray-900 text-sm/6"
+        {/* Card */}
+        <div className="rounded-2xl bg-white p-6 shadow-md ring-1 ring-black/5">
+          <h2 className="text-xl font-bold text-gray-900 text-center">
+            Sign in to your account
+          </h2>
+
+          {!!globalError && (
+            <div
+              className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+              role="alert"
+              aria-live="assertive"
             >
-              Email address
-            </label>
-            <div className="mt-2">
+              {globalError}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900">
+                Email address
+              </label>
               <input
                 id="email"
-                name="email"
                 type="email"
-                {...form.register("email")}
                 autoComplete="email"
-                className="block w-full rounded bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                {...register("email")}
+                className={`mt-2 block w-full rounded-lg border bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
+                  errors.email ? "border-red-300 ring-1 ring-red-200" : "border-gray-300"
+                }`}
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? "email-error" : undefined}
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">
+                <p id="email-error" className="mt-1 text-sm text-red-600">
                   {errors.email.message}
                 </p>
               )}
             </div>
-          </div>
 
-          <div>
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="block font-medium text-gray-900 text-sm/6"
-              >
-                Password
-              </label>
-              {/* <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+            {/* Password */}
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-900">
+                  Password
+                </label>
+                {/* Add your forgot password route later if needed */}
+              </div>
+              <div className="relative mt-2">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  {...register("password")}
+                  className={`block w-full rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
+                    errors.password ? "border-red-300 ring-1 ring-red-200" : "border-gray-300"
+                  }`}
+                  aria-invalid={!!errors.password}
+                  aria-describedby={errors.password ? "password-error" : undefined}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((p) => !p)}
+                  className="absolute inset-y-0 right-2 flex items-center rounded-md px-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  Forgot password?
-                </a>
-              </div> */}
-            </div>
-            <div className="relative mt-2">
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                {...form.register("password")}
-                autoComplete="current-password"
-                className="block w-full rounded bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute inset-y-0 flex items-center px-2 text-gray-500 right-2"
-              >
-                {showPassword ? (
-                  <EyeOffIcon size={20} />
-                ) : (
-                  <EyeIcon size={20} />
-                )}
-              </button>
+                  {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
+                </button>
+              </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">
+                <p id="password-error" className="mt-1 text-sm text-red-600">
                   {errors.password.message}
                 </p>
               )}
             </div>
-          </div>
 
-          <div>
+            {/* Submit */}
             <button
               type="submit"
-              className="flex w-full justify-center rounded bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={isSubmitting}
+              className="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Login {isSubmitting && <Loader2 className="ml-2 animate-spin" />}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in…
+                </>
+              ) : (
+                "Sign in"
+              )}
             </button>
-          </div>
-        </form>
+          </form>
 
-        <p className="mt-10 text-center text-gray-500 text-sm/6">
-          Not a member?{" "}
-          <a
-            href="/register"
-            className="font-semibold text-indigo-600 hover:text-indigo-500"
-          >
-            Register
-          </a>
+          {/* Bottom text */}
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Not a member?{" "}
+            <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
+              Register
+            </Link>
+          </p>
+        </div>
+
+        {/* Tiny helper text */}
+        <p className="mt-4 text-center text-xs text-gray-400">
+          Protected by best practices. Do not share your password.
         </p>
       </div>
     </div>

@@ -1,139 +1,212 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Loader2 } from "lucide-react";
-
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, EyeIcon, EyeOffIcon } from "lucide-react";
 import { axiosClient } from "../../api/axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+// --- Validation ---
+const schema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Enter a valid email"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    password_confirmation: z.string().min(8, "Confirm password must be at least 8 characters"),
+  })
+  .refine((data) => data.password === data.password_confirmation, {
+    path: ["password_confirmation"],
+    message: "Passwords do not match",
+  });
 
 export default function Register() {
   const navigate = useNavigate();
-
-  const form = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-    },
-  });
+  const [globalError, setGlobalError] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [showPw2, setShowPw2] = useState(false);
 
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = form;
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+    },
+    mode: "onTouched",
+  });
 
   const onSubmit = async (values) => {
+    setGlobalError("");
     try {
-    
+      // CSRF
       await axiosClient.get("/sanctum/csrf-cookie", {
         baseURL: import.meta.env.VITE_BACKEND_URL,
       });
 
-    
+      // Register
       await axiosClient.post("/register", values);
+
+      // Success → go to member dashboard (adjust if you want role-based routing)
       navigate("/dashboard");
     } catch (error) {
-      if (error.response?.data?.errors) {
-        const serverErrors = error.response.data.errors;
-        Object.keys(serverErrors).forEach((field) => {
-          setError(field, { message: serverErrors[field][0] });
+      const server = error?.response?.data;
+      if (server?.errors) {
+        // Field errors from backend
+        Object.entries(server.errors).forEach(([field, msgs]) => {
+          setError(field, { message: Array.isArray(msgs) ? msgs[0] : String(msgs) });
         });
+      } else {
+        setGlobalError(server?.message || "Something went wrong. Please try again.");
       }
     }
   };
 
   return (
-    <div className="flex flex-col justify-center flex-1 min-h-full py-12 ">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 font-bold tracking-tight text-center text-gray-900 text-2xl/9">
-          Create an Account
-        </h2>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md">
+        {/* Brand */}
+        <div className="mb-6 flex items-center justify-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gray-100 text-gray-700">
+            TM
+          </div>
+          <div className="text-lg font-semibold text-gray-900">Task Manager</div>
+        </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-900">
-              Name
-            </label>
-            <div className="mt-2">
+        {/* Card */}
+        <div className="rounded-2xl bg-white p-6 shadow-md ring-1 ring-black/5">
+          <h2 className="text-xl font-bold text-gray-900 text-center">Create an account</h2>
+
+          {!!globalError && (
+            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700" role="alert">
+              {globalError}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
+            {/* Name */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-900">
+                Name
+              </label>
               <input
                 id="name"
                 {...register("name")}
-                className="block w-full rounded bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+                className={`mt-2 block w-full rounded-lg border bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
+                  errors.name ? "border-red-300 ring-1 ring-red-200" : "border-gray-300"
+                }`}
+                aria-invalid={!!errors.name}
               />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-              )}
+              {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-              Email address
-            </label>
-            <div className="mt-2">
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900">
+                Email address
+              </label>
               <input
                 id="email"
+                type="email"
                 {...register("email")}
-                className="block w-full rounded bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+                className={`mt-2 block w-full rounded-lg border bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
+                  errors.email ? "border-red-300 ring-1 ring-red-200" : "border-gray-300"
+                }`}
+                aria-invalid={!!errors.email}
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-900">
-              Password
-            </label>
-            <div className="mt-2">
-              <input
-                id="password"
-                type="password"
-                {...register("password")}
-                className="block w-full rounded bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-              )}
+            {/* Password */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-900">
+                Password
+              </label>
+              <div className="relative mt-2">
+                <input
+                  id="password"
+                  type={showPw ? "text" : "password"}
+                  {...register("password")}
+                  className={`block w-full rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
+                    errors.password ? "border-red-300 ring-1 ring-red-200" : "border-gray-300"
+                  }`}
+                  aria-invalid={!!errors.password}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw((v) => !v)}
+                  className="absolute inset-y-0 right-2 flex items-center rounded-md px-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  aria-label={showPw ? "Hide password" : "Show password"}
+                >
+                  {showPw ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
+                </button>
+              </div>
+              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-900">
-              Confirm Password
-            </label>
-            <div className="mt-2">
-              <input
-                id="password_confirmation"
-                type="password"
-                {...register("password_confirmation")}
-                className="block w-full rounded bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
-              />
+            {/* Confirm Password */}
+            <div>
+              <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-900">
+                Confirm Password
+              </label>
+              <div className="relative mt-2">
+                <input
+                  id="password_confirmation"
+                  type={showPw2 ? "text" : "password"}
+                  {...register("password_confirmation")}
+                  className={`block w-full rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
+                    errors.password_confirmation ? "border-red-300 ring-1 ring-red-200" : "border-gray-300"
+                  }`}
+                  aria-invalid={!!errors.password_confirmation}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw2((v) => !v)}
+                  className="absolute inset-y-0 right-2 flex items-center rounded-md px-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  aria-label={showPw2 ? "Hide confirm password" : "Show confirm password"}
+                >
+                  {showPw2 ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
+                </button>
+              </div>
               {errors.password_confirmation && (
                 <p className="mt-1 text-sm text-red-600">{errors.password_confirmation.message}</p>
               )}
             </div>
-          </div>
 
-          <div>
+            {/* Submit */}
             <button
               type="submit"
-              className="flex w-full justify-center rounded bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={isSubmitting}
+              className="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Register {isSubmitting && <Loader2 className="ml-2 animate-spin" />}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account…
+                </>
+              ) : (
+                "Create account"
+              )}
             </button>
-          </div>
-        </form>
+          </form>
 
-        <p className="mt-10 text-sm text-center text-gray-500">
-          Already have an account?{" "}
-          <a href="/" className="font-semibold text-indigo-600 hover:text-indigo-500">
-            Login
-          </a>
+          {/* Bottom text */}
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <Link to="/" className="font-semibold text-indigo-600 hover:text-indigo-500">
+              Login
+            </Link>
+          </p>
+        </div>
+
+        {/* Tiny helper text */}
+        <p className="mt-4 text-center text-xs text-gray-400">
+          By registering, you agree to our Terms and acknowledge our Privacy Policy.
         </p>
       </div>
     </div>

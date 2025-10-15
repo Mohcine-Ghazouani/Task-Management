@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Transition,
+} from "@headlessui/react";
 import { Bell, UserIcon } from "lucide-react";
 import UserApi from "../services/Api/User/UserApi";
 import { UseUserContext } from "../context/UserContext";
@@ -16,7 +22,10 @@ export default function Navbar() {
 
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const unreadCount = useMemo(() => notifications.filter((n) => !n.is_read).length, [notifications]);
+  const unreadCount = useMemo(
+    () => notifications.filter((n) => !n.is_read).length,
+    [notifications]
+  );
   const pollRef = useRef(null);
 
   useEffect(() => {
@@ -43,11 +52,15 @@ export default function Navbar() {
   }, []);
 
   const markNotificationAsRead = async (id) => {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+    );
     try {
       await UserApi.updateNotification(id);
     } catch {
-      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: false } : n)));
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, is_read: false } : n))
+      );
     }
   };
 
@@ -72,11 +85,15 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed inset-x-0 top-0 z-50 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm">
+    <nav
+      className="fixed top-0 right-0 z-50 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm transition-[left] duration-300 ease-in-out"
+      style={{ left: "var(--sbw, 0px)" }}
+    >
       <div className="mx-auto px-4 pt-2 sm:px-4 lg:px-8 ">
         {/* Rounded container like your screenshot */}
         <div className="flex px-4 h-14 items-center justify-between rounded-2xl bg-white shadow-md ring-1 ring-black/5">
           {/* LEFT — Brand */}
+          
           <Link to="/admin-dashboard" className="flex items-center gap-2">
             <div className="grid h-8 w-8 place-items-center rounded-lg bg-gray-100 text-gray-700">
               TM
@@ -85,7 +102,6 @@ export default function Navbar() {
               Task Manager
             </span>
           </Link>
-
 
           {/* RIGHT — Bell next to Profile */}
           <div className="ml-auto flex items-center gap-2">
@@ -110,7 +126,9 @@ export default function Navbar() {
               >
                 <MenuItems className="absolute right-0 z-[70] mt-2 w-72 max-h-80 overflow-y-auto origin-top-right rounded-xl bg-white p-2 shadow-lg ring-1 ring-black/5 focus:outline-none">
                   <div className="mb-1 flex items-center justify-between px-1">
-                    <p className="text-xs font-medium text-gray-500">Notifications</p>
+                    <p className="text-xs font-medium text-gray-500">
+                      Notifications
+                    </p>
                     <button
                       onClick={markAllAsRead}
                       className="rounded-md px-2 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-50"
@@ -119,11 +137,16 @@ export default function Navbar() {
                     </button>
                   </div>
                   {loading ? (
-                    <div className="px-3 py-6 text-center text-sm text-gray-500">Loading…</div>
+                    <div className="px-3 py-6 text-center text-sm text-gray-500">
+                      Loading…
+                    </div>
                   ) : notifications.length ? (
                     notifications
                       .slice()
-                      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                      .sort(
+                        (a, b) =>
+                          new Date(b.created_at) - new Date(a.created_at)
+                      )
                       .map((n) => (
                         <MenuItem key={n.id}>
                           {({ active }) => (
@@ -132,7 +155,9 @@ export default function Navbar() {
                               className={cx(
                                 "w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm",
                                 active ? "bg-gray-100" : "",
-                                n.is_read ? "text-gray-600" : "font-semibold text-gray-800"
+                                n.is_read
+                                  ? "text-gray-600"
+                                  : "font-semibold text-gray-800"
                               )}
                             >
                               <p className="line-clamp-2">{n.message}</p>
@@ -144,7 +169,9 @@ export default function Navbar() {
                         </MenuItem>
                       ))
                   ) : (
-                    <div className="px-3 py-6 text-center text-sm text-gray-500">No notifications</div>
+                    <div className="px-3 py-6 text-center text-sm text-gray-500">
+                      No notifications
+                    </div>
                   )}
                 </MenuItems>
               </Transition>
@@ -171,7 +198,10 @@ export default function Navbar() {
                     {({ active }) => (
                       <Link
                         to="/admin-profile"
-                        className={cx("block rounded-md px-3 py-2 text-sm text-gray-700", active ? "bg-gray-100" : "")}
+                        className={cx(
+                          "block rounded-md px-3 py-2 text-sm text-gray-700",
+                          active ? "bg-gray-100" : ""
+                        )}
                       >
                         Profile
                       </Link>
@@ -181,7 +211,10 @@ export default function Navbar() {
                     {({ active }) => (
                       <button
                         onClick={handleLogout}
-                        className={cx("block w-full rounded-md px-3 py-2 text-left text-sm text-gray-700", active ? "bg-gray-100" : "")}
+                        className={cx(
+                          "block w-full rounded-md px-3 py-2 text-left text-sm text-gray-700",
+                          active ? "bg-gray-100" : ""
+                        )}
                       >
                         Logout
                       </button>

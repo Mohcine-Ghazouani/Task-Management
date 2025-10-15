@@ -48,7 +48,7 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
   }, [expanded]);
 
   // --- Broadcast current sidebar width via CSS var --sbw (so main can offset) ---
-  const currentWidth = isMobile ? 0 : expanded ? 256 /* w-64 */ : 64 /* w-16 */;
+  const currentWidth = isMobile ? 0 : expanded ? 256 /* w-64 */ : 64; /* w-16 */
 
   useEffect(() => {
     document.documentElement.style.setProperty("--sbw", `${currentWidth}px`);
@@ -68,21 +68,28 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
   );
 
   const shellBase =
-    "fixed left-0 z-40 h-full md:h-[calc(100vh-4rem)] top-0 md:top-16 border-r border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 transition-all duration-300 ease-in-out";
+    "fixed left-0 z-40 h-full md:h-[calc(100vh-4rem)] top-0 border-r border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 transition-all duration-300 ease-in-out";
   const desktopWidth = expanded ? "w-64" : "w-16";
   const mobileTranslate = sidebarOpen ? "translate-x-0" : "-translate-x-full";
 
   return (
     <>
       {/* Mobile hamburger */}
-      <button
+      {isMobile && (<button
         onClick={() => setSidebarOpen((v) => !v)}
-        className="fixed top-4 left-4 z-50 rounded-md bg-gray-100 p-2 text-gray-700 shadow-sm transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 md:hidden"
+        className="fixed top-5 left-8 z-50 rounded-md bg-gray-100 p-1 text-gray-700 shadow-sm transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 md:hidden"
         aria-label="Toggle sidebar"
         aria-expanded={sidebarOpen}
       >
-        <AlignJustify className="h-6 w-6" />
-      </button>
+        {sidebarOpen ? (
+                  <ChevronLeft className="h-5.5 w-5.5 " />
+                ) : (
+                  <AlignJustify className="h-5.5 w-5.5" />
+                )}
+        
+      </button>)
+      }
+      
 
       {/* Sidebar */}
       <nav
@@ -94,7 +101,7 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
       >
         {/* Brand + expand/collapse */}
         <div className="flex items-center justify-between gap-2 border-b border-gray-100 px-3 py-3 dark:border-gray-800">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 pt-2">
             <div className="grid h-8 w-8 place-items-center rounded-lg bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">
               AD
             </div>
@@ -104,20 +111,21 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
               </span>
             )}
           </div>
-
-          {!isMobile && (
-            <button
-              onClick={() => setExpanded((v) => !v)}
-              className="rounded-md p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800"
-              aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
-            >
-              {expanded ? (
-                <ChevronLeft className="h-5 w-5" />
-              ) : (
-                <ChevronRight className="h-5 w-5" />
-              )}
-            </button>
-          )}
+          <div className="pt-2">
+            {!isMobile && (
+              <button
+                onClick={() => setExpanded((v) => !v)}
+                className="rounded-md p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800"
+                aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+              >
+                {expanded ? (
+                  <ChevronLeft className="h-5 w-5 " />
+                ) : (
+                  <ChevronRight className="h-5 w-5" />
+                )}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Links */}
