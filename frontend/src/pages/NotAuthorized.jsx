@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ShieldAlert, LogIn } from "lucide-react";
+
 
 export default function NotAuthorized() {
   const navigate = useNavigate();

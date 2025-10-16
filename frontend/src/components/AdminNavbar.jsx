@@ -19,7 +19,7 @@ function cx(...xs) {
 export default function Navbar() {
   const { logout } = UseUserContext();
   const navigate = useNavigate();
-
+  const [isMobile] = useState(() => window.innerWidth < 768);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const unreadCount = useMemo(
@@ -93,15 +93,25 @@ export default function Navbar() {
         {/* Rounded container like your screenshot */}
         <div className="flex px-4 h-14 items-center justify-between rounded-2xl bg-white shadow-md ring-1 ring-black/5">
           {/* LEFT — Brand */}
-          
-          <Link to="/admin-dashboard" className="flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gray-100 text-gray-700">
-              TM
+          {isMobile && (
+            <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+              <Link to="/admin-dashboard" className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-gray-900 text-center">
+                  Task Manager
+                </span>
+              </Link>
             </div>
-            <span className="sm:inline text-sm font-semibold text-gray-900">
-              Task Manager
-            </span>
-          </Link>
+          )}
+          {!isMobile && (
+            <Link to="/admin-dashboard" className="flex items-center gap-2">
+              <div className="grid h-8 w-8 place-items-center rounded-lg bg-gray-100 text-gray-700">
+                TM
+              </div>
+              <span className="sm:inline text-sm font-semibold text-gray-900">
+                Task Manager
+              </span>
+            </Link>
+          )}
 
           {/* RIGHT — Bell next to Profile */}
           <div className="ml-auto flex items-center gap-2">

@@ -5,8 +5,8 @@ import Register from "../components/auth/Register";
 
 import Layout from "../layouts/Layout";
 import GuestLayout from "../layouts/GuestLayout";
-import UserDashbordLayout from "../layouts/user/UserDashboardLayout";
-import AdminDashbordLayout from "../layouts/Admin/AdminDashboardLayout";
+import UserLayout from "../layouts/user/UserLayout";
+import AdminLayout from "../layouts/Admin/AdminLayout";
 
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 
@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
   ]},
   { element: (
       <ProtectedRoute allowedRoles={["Member"]}>
-        <UserDashbordLayout />
+        <UserLayout />
       </ProtectedRoute>
     ), children: [
       { path: DASHBOARD_ROUTE, element: <Dashboard /> },
@@ -51,7 +51,7 @@ export const router = createBrowserRouter([
   ]},
   { element: (
       <ProtectedRoute allowedRoles={["Admin"]}>
-        <AdminDashbordLayout />
+        <AdminLayout />
       </ProtectedRoute>
     ), children: [
       { path: ADMIN_DASHBOARD_ROUTE, element: <AdminDashboard /> },

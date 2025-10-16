@@ -75,21 +75,22 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
   return (
     <>
       {/* Mobile hamburger */}
-      {isMobile && (<button
-        onClick={() => setSidebarOpen((v) => !v)}
-        className="fixed top-5 left-8 z-50 rounded-md bg-gray-100 p-1 text-gray-700 shadow-sm transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 md:hidden"
-        aria-label="Toggle sidebar"
-        aria-expanded={sidebarOpen}
-      >
-        {sidebarOpen ? (
-                  <ChevronLeft className="h-5.5 w-5.5 " />
-                ) : (
-                  <AlignJustify className="h-5.5 w-5.5" />
-                )}
-        
-      </button>)
-      }
-      
+      {isMobile && (
+        <button
+          onClick={() => setSidebarOpen((v) => !v)}
+          className="md:hidden"
+          aria-label="Toggle sidebar"
+          aria-expanded={sidebarOpen}
+        >
+          {sidebarOpen ? (
+            <ChevronLeft className="h-7 w-7 fixed top-4.5 left-52 z-50 rounded-md bg-gray-100 p-1 m-1 text-gray-700 shadow-sm transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 md:hidden" />
+          ) : (
+            <>
+              <AlignJustify className="h-7 w-7 fixed top-4.5 left-7 z-50 rounded-md bg-gray-100 p-1 m-1 text-gray-700 shadow-sm transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 md:hidden" />
+            </>
+          )}
+        </button>
+      )}
 
       {/* Sidebar */}
       <nav
